@@ -1,7 +1,7 @@
 import qualified Data.Set as Set
 
-main' :: IO ()
-main' = do
+main :: IO ()
+main = do
   content <- readFile "input.txt"
   let xs = parseFile content
   let calced = reverse $ foldl calcFreqs [0] xs
