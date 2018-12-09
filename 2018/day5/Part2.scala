@@ -1,15 +1,29 @@
 import scala.io.Source
 
-object Part1 {
+object Part2 {
   def main(args: Array[String]): Unit = {
     val source: List[Char] = Source
       .fromFile("input.txt")
       .toList
       .filter(_.isLetter)
 
-    println(deletePairs(source))
+    // Unordered List of Set of Units: List(Set(A, a), Set(B, b))
+    val units = source
+      .groupBy(_.toLower)
+      .values
+      .map(_.toSet)
+      .toList
+
+    val shortest = units.map({ unit =>
+      deletePairs(source.filterNot(unit.contains(_)))
+    })
+    .sorted
+    .head
+
+    println(shortest)
   }
 
+  // copied from Part1.scala
   private def deletePairs(source: Seq[Char]): Int = {
     val init = source.head
     val rest = source.tail
@@ -32,6 +46,7 @@ object Part1 {
   }
 
   // a and A match OR A and a
+  // copied from Part1.scala
   private def isMatch(a: Char, b: Char): Boolean = {
     (a.isLower && b.isUpper && a.toUpper == b) ||
     (a.isUpper && b.isLower && a.toLower == b)
