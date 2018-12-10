@@ -65,12 +65,10 @@ object Part1 {
   }
 
   private def topologicalSort(graph: Digraph, degreeMap: DegreeMap): String = {
-    // find vertices with in-degree 0, and populate queue
-    val initKeys = degreeMap.filter({ case (k, v) => v == 0 }).keys
-
     val pQueue = newPQueue
 
-    initKeys.foreach(pQueue.enqueue(_))
+    // Find vertices with in-degree 0, and populate queue
+    getZeroInDegree(degreeMap).foreach(pQueue.enqueue(_))
 
     topologicalSort(graph, degreeMap, pQueue)
   }
@@ -83,7 +81,7 @@ object Part1 {
     if (pQueue.isEmpty) {
       ""
     } else {
-      // dequeue, save letter for result
+      // Dequeue, save letter for result
       val letter = pQueue.dequeue
 
       // Reduce In-Degree of all vertices adjacent to it by 1
