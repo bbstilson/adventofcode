@@ -1,6 +1,5 @@
 import scala.io.Source
 
-
 object Part1 {
   def main(args: Array[String]): Unit = {
     val source: Iterator[Int] = Source
