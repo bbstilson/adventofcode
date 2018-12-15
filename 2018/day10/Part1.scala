@@ -82,7 +82,6 @@ object Part1 {
     Light(Point(pX, pY), Point(vX, vY))
   }
 
-  // Returns lower right corner.
   def getBoundingBox(ps: List[Point]): BoundingBox = {
     val xs = ps.map(_.x)
     val ys = ps.map(_.y)
