@@ -30,7 +30,7 @@ object Part1 {
   ): (Long, List[Light]) = {
     // move lights
     val nextLights = lights.map(moveLight)
-    // get new bounding BoundingBox
+    // get new BoundingBox area
     val nextBoundingBoxArea = getBoundingBoxArea(nextLights.map(_.position))
     // if smaller continue. else, return stepNum
     if (nextBoundingBoxArea < boundingBoxArea) {
