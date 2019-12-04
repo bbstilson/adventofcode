@@ -2,10 +2,6 @@ package org.bbstilson.aoc2019
 
 import scala.collection.immutable.WrappedString
 
-/*
-Two adjacent digits are the same (like 22 in 122345).
-Going from left to right, the digits never decrease; they only ever increase or stay the same (like 111123 or 135679).
-*/
 object Day4 {
   def main(args: Array[String]): Unit = {
     println(part1(254032 to 789860))
