@@ -1,5 +1,7 @@
 package org.bbstilson.aoc2019
 
+import org.bbstilson.implicits.ListImplicits._
+
 import scala.collection.immutable.WrappedString
 
 object Day4 {
@@ -19,9 +21,9 @@ object Day4 {
 
   def isValid2(x: Int): Boolean = {
     val asStr = x.toString()
-    val freqMap = asStr.groupMapReduce(identity)(_ => 1)(_ + _)
-    val hasAdjPair = freqMap.values.find(_ == 2).isDefined
-    allIncrease(asStr.toSeq.sliding(2).toList) && hasAdjPair
+    val allInc = allIncrease(asStr.toSeq.sliding(2).toList)
+    val hasAdj = asStr.toList.toFrequencyMap.values.find(_ == 2).isDefined
+    allInc && hasAdj
   }
 
   private def allIncrease(xs: List[WrappedString]): Boolean = xs.forall(s => s.head.toInt <= s.last.toInt)
