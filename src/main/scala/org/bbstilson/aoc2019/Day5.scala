@@ -5,7 +5,7 @@ import scala.util.Try
 object Day5 {
 
   def main(args: Array[String]): Unit = {
-    val memory = parseInput().zipWithIndex.map(_.swap).toMap
+    val memory = mkMemory(parseInput())
     println(Try(run(0, memory, 1))) // part 1
     println(Try(run(0, memory, 5))) // part 2
   }
