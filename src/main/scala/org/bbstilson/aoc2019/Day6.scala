@@ -23,15 +23,10 @@ object Day6 {
 
     // Filter down the original paths so that we can get the distances it
     // took to get to those planets.
-    val mySharedPath = myPath.filter { case (planet, _) => sharedPlanets.contains(planet) }
-    val santaSharedPath = santaPath.filter { case (planet, _) => sharedPlanets.contains(planet) }
+    val (_, myDist) = myPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
+    val (_, santaDist) = santaPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
 
-    // Build a map from planet -> total distance from both planets.
-    // Then, find the smallest distance.
-    (mySharedPath ++ santaSharedPath)
-      .groupMapReduce(_._1)(_._2)(_ + _)
-      .values
-      .min
+    myDist + santaDist
   }
 
   @tailrec
