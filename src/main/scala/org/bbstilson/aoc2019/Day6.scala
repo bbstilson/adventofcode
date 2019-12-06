@@ -22,16 +22,12 @@ object Day6 {
     val sharedPlanets = myPath.toMap.keySet.intersect(santaPath.toMap.keySet)
 
     // Filter down the original paths so that we can get the distances it
-    // took to get to those planets.
-    val mySharedPath = myPath.filter { case (planet, _) => sharedPlanets.contains(planet) }
-    val santaSharedPath = santaPath.filter { case (planet, _) => sharedPlanets.contains(planet) }
+    // took to get to those planets. Since our list is ordered, we can take
+    // the first planet that was added, which is the last element.
+    val (_, myDist) = myPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
+    val (_, santaDist) = santaPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
 
-    // Build a map from planet -> total distance from both planets.
-    // Then, find the smallest distance.
-    (mySharedPath ++ santaSharedPath)
-      .groupMapReduce(_._1)(_._2)(_ + _)
-      .values
-      .min
+    myDist + santaDist
   }
 
   @tailrec
