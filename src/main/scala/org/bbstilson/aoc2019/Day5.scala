@@ -10,26 +10,24 @@ object Day5 {
     println(Try(run(0, memory, 5))) // part 2
   }
 
-  private def mkMemory(xs: List[Int]): Map[Int, Int] = {
-    xs.zipWithIndex.map(_.swap).toMap
-  }
+  def mkMemory(xs: List[Int]): Map[Int, Int] = xs.zipWithIndex.map(_.swap).toMap
 
   def run(index: Int, memory: Map[Int, Int], input: Int): Int = {
-    val (command, modes) = parse(memory(index))
+    val (command, args) = parse(index, memory)
     command match {
-      case Add         => add(index, memory, modes, input)
-      case Multiply    => mult(index, memory, modes, input)
+      case Add         => add(index, memory, args, input)
+      case Multiply    => mult(index, memory, args, input)
       case Input       => handleInput(index, memory, input)
-      case Output      => output(index, memory, modes, input)
-      case JumpIfTrue  => jumpIfTrue(index, memory, modes, input)
-      case JumpIfFalse => jumpIfFalse(index, memory, modes, input)
-      case IfLessThan  => ifLessThan(index, memory, modes, input)
-      case IfEquals    => ifEquals(index, memory, modes, input)
+      case Output      => output(index, memory, args, input)
+      case JumpIfTrue  => jumpIfTrue(index, memory, args, input)
+      case JumpIfFalse => jumpIfFalse(index, memory, args, input)
+      case IfLessThan  => ifLessThan(index, memory, args, input)
+      case IfEquals    => ifEquals(index, memory, args, input)
       case Exit        => exit()
     }
   }
 
-  case class Modes(m1: Int, m2: Int, m3: Int)
+  case class Args(a: Option[Int], b: Option[Int], c: Option[Int])
 
   sealed trait Command
   case object Add extends Command
@@ -42,9 +40,10 @@ object Day5 {
   case object IfEquals extends Command
   case object Exit extends Command
 
-  private def parse(x: Int): (Command, Modes) = {
-    val op = x % 100
-    val command = op match {
+  private def parse(index: Int, memory: Map[Int, Int]): (Command, Args) = {
+    val op = memory(index)
+    val args = parseArgs(op, index, memory)
+    val command = op % 100 match {
       case 1  => Add
       case 2  => Multiply
       case 3  => Input
@@ -54,88 +53,60 @@ object Day5 {
       case 7  => IfLessThan
       case 8  => IfEquals
       case 99 => Exit
-      case _ => throw new Error(s"hit a weird op code: $op | ${x}")
+      case _ => throw new Error(s"hit a weird op code: $op")
     }
 
-    val m1 = x / 100 % 10
-    val m2 = x / 1000 % 10
-    val m3 = x / 10000 % 10
-    val modes = Modes(m1, m2, m3)
-
-    (command, modes)
+    (command, args)
   }
 
-  private def add(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    run(index + 4, buildMemoryMath(index, modes, memory, _ + _), input)
+  private def parseArgs(op: Int, index: Int, memory: Map[Int, Int]): Args = {
+    val x = index + 1
+    val y = index + 2
+    val z = index + 3
+    val v1 = if ((op / 100 % 10) == 0) memory.get(x).flatMap(memory.get) else memory.get(x)
+    val v2 = if ((op / 1000 % 10) == 0) memory.get(y).flatMap(memory.get) else memory.get(y)
+    val v3 = if ((op / 10000 % 10) == 0) memory.get(z).flatMap(memory.get) else memory.get(z)
+    Args(v1, v2, v3)
   }
 
-  private def mult(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    run(index + 4, buildMemoryMath(index, modes, memory, _ * _), input)
+  private def add(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val value = args.a.get + args.b.get
+    run(index + 4, memory + (memory(index + 3) -> value), input)
+  }
+
+  private def mult(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val value = args.a.get * args.b.get
+    run(index + 4, memory + (memory(index + 3) -> value), input)
   }
 
   private def handleInput(index: Int, memory: Map[Int, Int], input: Int): Int = {
     run(index + 2, memory + (memory(index + 1) -> input), input)
   }
 
-  private def output(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    val loc = index + 1
-    val value = if (modes.m1 == 0) memory(memory(loc)) else memory(loc)
-    if (value != 0) println(s"output: $value")
+  private def output(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val output = args.a.get
+    if (output != 0) println(s"Output: $output")
     run(index + 2, memory, input)
   }
 
-  private def jumpIfTrue(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    val nextIdx = doJump(index, modes, memory, _ != 0)
+  private def jumpIfTrue(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val nextIdx = if (args.a.get != 0) args.b.get else index + 3
     run(nextIdx, memory, input)
   }
 
-  private def jumpIfFalse(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    val nextIdx = doJump(index, modes, memory, _ == 0)
+  private def jumpIfFalse(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val nextIdx = if (args.a.get == 0) args.b.get else index + 3
     run(nextIdx, memory, input)
   }
 
-  private def ifLessThan(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    run(index + 4, buildMemoryComp(index, modes, memory, _ < _), input)
+  private def ifLessThan(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val value = if (args.a.get < args.b.get) 1 else 0
+    run(index + 4, memory + (memory(index + 3) -> value), input)
   }
 
-  private def ifEquals(index: Int, memory: Map[Int, Int], modes: Modes, input: Int): Int = {
-    run(index + 4, buildMemoryComp(index, modes, memory, _ == _), input)
-  }
-
-  // Memory helpers.
-  private def buildMemoryMath(index: Int, modes: Modes, memory: Map[Int, Int], f: (Int, Int) => Int): Map[Int, Int] = {
-    val x = index + 1
-    val y = index + 2
-    val z = index + 3
-
-    val p1 = if (modes.m1 == 0) memory(memory(x)) else memory(x)
-    val p2 = if (modes.m2 == 0) memory(memory(y)) else memory(y)
-
-    memory + (memory(z) -> f(p1, p2))
-  }
-
-  private def doJump(index: Int, modes: Modes, memory: Map[Int, Int], f: (Int) => Boolean): Int = {
-    val x = index + 1
-    val y = index + 2
-    val p1Value = if (modes.m1 == 0) memory(memory(x)) else memory(x)
-    if (f(p1Value)) {
-      if (modes.m2 == 0) memory(memory(y)) else memory(y)
-    } else index + 3
-  }
-
-  private def buildMemoryComp(
-    index: Int,
-    modes: Modes,
-    memory: Map[Int, Int],
-    f: (Int, Int) => Boolean
-  ): Map[Int, Int] = {
-    val x = index + 1
-    val y = index + 2
-    val z = index + 3
-    val value1 = if (modes.m1 == 0) memory(memory(x)) else memory(x)
-    val value2 = if (modes.m2 == 0) memory(memory(y)) else memory(y)
-    val value = if (f(value1, value2)) 1 else 0
-    memory + (memory(z) -> value)
+  private def ifEquals(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+    val value = if (args.a.get == args.b.get) 1 else 0
+    run(index + 4, memory + (memory(index + 3) -> value), input)
   }
 
   private def exit(): Int = 99
