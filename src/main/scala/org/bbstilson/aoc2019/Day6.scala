@@ -22,7 +22,8 @@ object Day6 {
     val sharedPlanets = myPath.toMap.keySet.intersect(santaPath.toMap.keySet)
 
     // Filter down the original paths so that we can get the distances it
-    // took to get to those planets.
+    // took to get to those planets. Since our list is ordered, we can take
+    // the first planet that was added, which is the last element.
     val (_, myDist) = myPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
     val (_, santaDist) = santaPath.filter { case (planet, _) => sharedPlanets.contains(planet) }.last
 
