@@ -6,8 +6,8 @@ object Day5 {
 
   def main(args: Array[String]): Unit = {
     val program = parseInput("2019/day5/input.txt")
-    println(IntCodeComputer(program, LazyList(1)).head == 7566643) // part 1
-    println(IntCodeComputer(program, LazyList(5)).head == 9265694) // part 2
+    println(IntCodeComputer(program, LazyList(1)).head) // part 1
+    println(IntCodeComputer(program, LazyList(5)).head) // part 2
   }
 
   def parseInput(resource: String): List[Int] = {
