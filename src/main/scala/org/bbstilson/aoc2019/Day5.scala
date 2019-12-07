@@ -1,33 +1,33 @@
 package org.bbstilson.aoc2019
 
-import scala.util.Try
-
 object Day5 {
 
   def main(args: Array[String]): Unit = {
-    val memory = mkMemory(parseInput())
-    println(Try(run(0, memory, 1))) // part 1
-    println(Try(run(0, memory, 5))) // part 2
+    val memory = mkMemory(parseInput("2019/day5/input.txt"))
+    println(run(0, memory, IOState(List(1)))) // part 1
+    println(run(0, memory, IOState(List(5)))) // part 2
   }
 
   def mkMemory(xs: List[Int]): Map[Int, Int] = xs.zipWithIndex.map(_.swap).toMap
 
-  def run(index: Int, memory: Map[Int, Int], input: Int): Int = {
+
+  def run(index: Int, memory: Map[Int, Int], state: IOState): IOState = {
     val (command, args) = parse(index, memory)
     command match {
-      case Add         => add(index, memory, args, input)
-      case Multiply    => mult(index, memory, args, input)
-      case Input       => handleInput(index, memory, input)
-      case Output      => output(index, memory, args, input)
-      case JumpIfTrue  => jumpIfTrue(index, memory, args, input)
-      case JumpIfFalse => jumpIfFalse(index, memory, args, input)
-      case IfLessThan  => ifLessThan(index, memory, args, input)
-      case IfEquals    => ifEquals(index, memory, args, input)
-      case Exit        => exit()
+      case Add         => add(index, memory, args, state)
+      case Multiply    => mult(index, memory, args, state)
+      case Input       => handleInput(index, memory, state)
+      case Output      => output(index, memory, args, state)
+      case JumpIfTrue  => jumpIfTrue(index, memory, args, state)
+      case JumpIfFalse => jumpIfFalse(index, memory, args, state)
+      case IfLessThan  => ifLessThan(index, memory, args, state)
+      case IfEquals    => ifEquals(index, memory, args, state)
+      case Exit        => state
     }
   }
 
-  case class Args(a: Option[Int], b: Option[Int], c: Option[Int])
+  final case class IOState(input: List[Int] = Nil, output: List[Int] = Nil)
+  final case class Args(a: Option[Int], b: Option[Int], c: Option[Int])
 
   sealed trait Command
   case object Add extends Command
@@ -69,51 +69,52 @@ object Day5 {
     Args(v1, v2, v3)
   }
 
-  private def add(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def add(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val value = args.a.get + args.b.get
-    run(index + 4, memory + (memory(index + 3) -> value), input)
+    run(index + 4, memory + (memory(index + 3) -> value), state)
   }
 
-  private def mult(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def mult(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val value = args.a.get * args.b.get
-    run(index + 4, memory + (memory(index + 3) -> value), input)
+    run(index + 4, memory + (memory(index + 3) -> value), state)
   }
 
-  private def handleInput(index: Int, memory: Map[Int, Int], input: Int): Int = {
-    run(index + 2, memory + (memory(index + 1) -> input), input)
+  private def handleInput(index: Int, memory: Map[Int, Int], state: IOState): IOState = {
+    val nextState = state.copy(input = state.input.tail)
+    run(index + 2, memory + (memory(index + 1) -> state.input.head), nextState)
   }
 
-  private def output(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
-    val output = args.a.get
-    if (output != 0) println(s"Output: $output")
-    run(index + 2, memory, input)
+  private def output(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
+    val nextState = args.a.collect {
+      case x if x != 0 => state.copy(output = x +: state.output)
+    }.getOrElse(state)
+
+    run(index + 2, memory, nextState)
   }
 
-  private def jumpIfTrue(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def jumpIfTrue(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val nextIdx = if (args.a.get != 0) args.b.get else index + 3
-    run(nextIdx, memory, input)
+    run(nextIdx, memory, state)
   }
 
-  private def jumpIfFalse(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def jumpIfFalse(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val nextIdx = if (args.a.get == 0) args.b.get else index + 3
-    run(nextIdx, memory, input)
+    run(nextIdx, memory, state)
   }
 
-  private def ifLessThan(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def ifLessThan(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val value = if (args.a.get < args.b.get) 1 else 0
-    run(index + 4, memory + (memory(index + 3) -> value), input)
+    run(index + 4, memory + (memory(index + 3) -> value), state)
   }
 
-  private def ifEquals(index: Int, memory: Map[Int, Int], args: Args, input: Int): Int = {
+  private def ifEquals(index: Int, memory: Map[Int, Int], args: Args, state: IOState): IOState = {
     val value = if (args.a.get == args.b.get) 1 else 0
-    run(index + 4, memory + (memory(index + 3) -> value), input)
+    run(index + 4, memory + (memory(index + 3) -> value), state)
   }
 
-  private def exit(): Int = 99
-
-  def parseInput(): List[Int] = {
+  def parseInput(resource: String): List[Int] = {
     io.Source
-      .fromResource("2019/day5/input.txt")
+      .fromResource(resource)
       .getLines.toList
       .head
       .split(",")
