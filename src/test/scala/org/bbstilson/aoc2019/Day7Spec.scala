@@ -6,7 +6,7 @@ import org.bbstilson.aoc2019.intcode.IntCodeComputer
 class Day7Spec extends UnitSpec {
   behavior of "Day7"
 
-  it should "not regress" in {
+  "part 1" should "not regress" in {
     val program = Day7.parseInput("2019/day7/input.txt")
     Day7.part1(program) shouldBe 87138
   }
@@ -17,6 +17,11 @@ class Day7Spec extends UnitSpec {
       IntCodeComputer(program, LazyList(phase, prev)).head
     }
     output shouldBe 43210
+  }
+
+  "part 2" should "not regress" ignore {
+    val program = Day7.parseInput("2019/day7/input.txt")
+    Day7.part2(program) shouldBe 1
   }
 
   "part 2 test" should "not regress" in {
