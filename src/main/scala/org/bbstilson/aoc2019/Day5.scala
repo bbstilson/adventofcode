@@ -4,8 +4,8 @@ object Day5 {
 
   def main(args: Array[String]): Unit = {
     val memory = mkMemory(parseInput("2019/day5/input.txt"))
-    println(run(0, memory, IOState(List(1)))) // part 1
-    println(run(0, memory, IOState(List(5)))) // part 2
+    println(run(0, memory, IOState(List(1))).output.head) // part 1
+    println(run(0, memory, IOState(List(5))).output.head) // part 2
   }
 
   def mkMemory(xs: List[Int]): Map[Int, Int] = xs.zipWithIndex.map(_.swap).toMap
