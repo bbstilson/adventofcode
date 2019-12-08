@@ -10,10 +10,9 @@ object Day8 {
 
   def part1(data: List[Int]): Int = {
     val (layer, _) = data
-      .sliding(150, 150).toList
-      .map { layer => (layer.mkString(""), layer.filter(_ > 0)) }
-      .toMap
-      .map { case (str, xs) => (str, xs.size) }
+      .sliding(150, 150)
+      .toList
+      .map { layer => (layer.mkString(""), layer.filter(_ > 0).size) }
       .maxBy { case (_, fewestZeros) => fewestZeros }
 
     layer.count(_ == '1') * layer.count(_ == '2')
