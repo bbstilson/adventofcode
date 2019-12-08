@@ -6,7 +6,7 @@ object Day7 {
   def main(args: Array[String]): Unit = {
     val program = parseInput("2019/day7/input.txt")
     println(part1(program))
-    println(part2(program))
+    // println(part2(program)) This doesn't work :(
   }
 
 
