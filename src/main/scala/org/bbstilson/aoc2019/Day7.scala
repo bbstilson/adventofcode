@@ -17,19 +17,20 @@ object Day7 {
     }.max
   }
 
-  def part2(program: List[Int]): Int = {
+  def part2(program: List[Int]): Long = {
     List(5,6,7,8,9)
       .permutations
       .map { ps => lazyCompute(program, ps) }
       .max
   }
 
-  def lazyCompute(program: List[Int], phases: List[Int]): Int = {
-    lazy val a: LazyList[Int] = apply(program, phases(0) #:: 0 #:: e)
-    lazy val b: LazyList[Int] = apply(program, phases(1) #:: a)
-    lazy val c: LazyList[Int] = apply(program, phases(2) #:: b)
-    lazy val d: LazyList[Int] = apply(program, phases(3) #:: c)
-    lazy val e: LazyList[Int] = apply(program, phases(4) #:: d)
+  def lazyCompute(program: List[Int], phases: List[Int]): Long = {
+    val p = program.map(_.toLong) // ugh
+    lazy val a: LazyList[Long] = Day9(p, phases(0).toLong #:: 0L #:: e)
+    lazy val b: LazyList[Long] = Day9(p, phases(1).toLong #:: a)
+    lazy val c: LazyList[Long] = Day9(p, phases(2).toLong #:: b)
+    lazy val d: LazyList[Long] = Day9(p, phases(3).toLong #:: c)
+    lazy val e: LazyList[Long] = Day9(p, phases(4).toLong #:: d)
     e.last
   }
 

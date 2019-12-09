@@ -18,9 +18,9 @@ class Day7Spec extends UnitSpec {
     output shouldBe 43210
   }
 
-  "part 2" should "not regress" ignore {
+  "part 2" should "not regress" in {
     val program = Day7.getProgramFromResource("2019/day7/input.txt")
-    Day7.part2(program) shouldBe 1
+    Day7.part2(program) shouldBe 17279674
   }
 
   "part 2 test" should "not regress" in {
