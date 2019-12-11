@@ -7,7 +7,7 @@ object Day9 {
     index: Int,
     memory: Memory,
     inputs: LazyList[Long],
-    relativeBase: Long = 0L
+    relativeBase: Int = 0
   )
 
   def apply(program: List[Long], inputs: LazyList[Long] = LazyList.empty): LazyList[Long] = {
@@ -16,13 +16,13 @@ object Day9 {
 
   def outputs(init: ProgramState): LazyList[Long] = LazyList.unfold(init)(step).flatten
 
-  def mkMemory(xs: List[Long]): Memory = xs.zipWithIndex.map { case (x, i) => (i, x) }.toMap.withDefaultValue(0)
+  private def mkMemory(xs: List[Long]): Memory = xs.zipWithIndex.map { case (x, i) => (i, x) }.toMap.withDefaultValue(0)
 
-  def getCommand(state: ProgramState): Int = state.memory(state.index).toInt
-  def getOpcode(cmd: Int): Int = (cmd % 100).toInt
-  def paramMode(cmd: Long)(param: Int): Int = (cmd / math.pow(10, 2 + param) % 10).toInt
-  def getParamModes(cmd: Long): Vector[Int] = Vector(0,1,2).map(paramMode(cmd))
-  def readParamWithState(state: ProgramState, paramModes: Vector[Int])(i: Int): Long = {
+  private def getCommand(state: ProgramState): Int = state.memory(state.index).toInt
+  private def getOpcode(cmd: Int): Int = (cmd % 100).toInt
+  private def paramMode(cmd: Long)(param: Int): Int = (cmd / math.pow(10, 2 + param) % 10).toInt
+  private def getParamModes(cmd: Long): Vector[Int] = Vector(0,1,2).map(paramMode(cmd))
+  private def readParamWithState(state: ProgramState, paramModes: Vector[Int])(i: Int): Long = {
     val ProgramState(index, memory, _, relativeBase) = state
     val pos = i + 1
     paramModes(i) match {
@@ -33,7 +33,7 @@ object Day9 {
     }
   }
 
-  def writeParamWithState(state: ProgramState, paramModes: Vector[Int])(i: Int, value: Long): Memory = {
+  private def writeParamWithState(state: ProgramState, paramModes: Vector[Int])(i: Int, value: Long): Memory = {
     val ProgramState(index, memory, _, relativeBase) = state
     val pos = i + 1
     paramModes(i) match {
@@ -43,7 +43,7 @@ object Day9 {
     }
   }
 
-  def step(state: ProgramState): Option[(Option[Long], ProgramState)] = {
+  private def step(state: ProgramState): Option[(Option[Long], ProgramState)] = {
     val ProgramState(index, memory, inputs, relativeBase) = state
     val cmd = getCommand(state)
     val opcode = getOpcode(cmd)
@@ -87,7 +87,7 @@ object Day9 {
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
       case 9  => {
-        Some((None, state.copy(index = index + 2, relativeBase = relativeBase + readParam(0))))
+        Some((None, state.copy(index = index + 2, relativeBase = relativeBase + readParam(0).toInt)))
       }
       case 99 => None
       case _ => throw new Error(s"hit a weird op code: ${opcode}")
