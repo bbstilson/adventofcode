@@ -10,19 +10,19 @@ class Day10Spec extends UnitSpec {
   "slope" should "calculate slopes" in {
     val s1 = Point(1,2)
     val s2 = Point(3,4)
-    s1.slope(s2) shouldBe PosReal(1D)
+    getSlope(s1,s2) shouldBe PosReal(1D)
 
     val s3 = Point(13,2)
     val s4 = Point(-30,-10)
-    s3.slope(s4) shouldBe NegReal(0.2790697674D)
+    getSlope(s3,s4) shouldBe NegReal(0.2790697674D)
 
     val s5 = Point(0.0,0.0)
     val s6 = Point(0.0,1.0)
-    s5 slope s6 shouldBe PosConstant
+    getSlope(s5,s6) shouldBe PosConstant
 
     val s7 = Point(0.0,0.0)
     val s8 = Point(1.0,0.0)
-    s7 slope s8 shouldBe PosInfinite
+    getSlope(s7,s8) shouldBe PosInfinite
   }
 
   "test 1" should "not regress" in {
@@ -84,6 +84,30 @@ class Day10Spec extends UnitSpec {
     |.....#.#..""")
 
     part1(test) shouldBe (Point(6,3), 41)
+  }
+
+  "getAngle" should "calculate angles" in {
+    val center = Point(12,12)
+    val a = Point(18,6)  // I
+    val b = Point(18,18) // II
+    val c = Point(6,18)  // III
+    val d = Point(6,6)   // IV
+
+    getAngle(center, a) shouldBe 45D
+    getAngle(center, b) shouldBe 135D
+    getAngle(center, c) shouldBe 225D
+    getAngle(center, d) shouldBe 315D
+  }
+
+  "part 1" should "not regress" in {
+    val space = parseInput()
+    part1(space)._2 shouldBe 269
+  }
+
+  "part 2" should "not regress" in {
+    val space = parseInput()
+    val (best, _) = part1(space)
+    part2(space, best) shouldBe 612
   }
 
   private def mkSpace(str: String): Space = {
