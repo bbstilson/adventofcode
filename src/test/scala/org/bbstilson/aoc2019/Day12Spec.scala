@@ -57,4 +57,24 @@ class Day12Spec extends UnitSpec {
     val totalEnergy = Iterator.iterate(moons)(step).drop(100).next.map(energy).sum
     totalEnergy shouldBe 1940
   }
+
+  "part 2" should "not regress - test" in {
+    val m1 = Moon(Point(-1,0,2))
+    val m2 = Moon(Point(2,-10,-7))
+    val m3 = Moon(Point(4,-8,8))
+    val m4 = Moon(Point(3,5,-1))
+    val moons = List(m1,m2,m3,m4)
+
+    Iterator.iterate(moons)(step).drop(2772).next shouldBe moons
+  }
+
+  "part 2" should "not regress - test 2" in {
+    val m1 = Moon(Point(-1,0,2))
+    val m2 = Moon(Point(2,-10,-7))
+    val m3 = Moon(Point(4,-8,8))
+    val m4 = Moon(Point(3,5,-1))
+    val moons = List(m1,m2,m3,m4)
+
+    part2(moons)
+  }
 }
