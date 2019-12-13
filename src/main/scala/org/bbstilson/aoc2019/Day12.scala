@@ -1,5 +1,8 @@
 package org.bbstilson.aoc2019
 
+import org.bbstilson.aoc2019.utils.MathUtils.lcm
+import scala.annotation.tailrec
+
 object Day12 {
   final case class Point(x: Int, y: Int, z: Int)
   final case class Velocity(x: Int, y: Int, z: Int)
@@ -11,7 +14,7 @@ object Day12 {
 
   def main(args: Array[String]): Unit = {
     val moons = parseMoons()
-    println(part1(moons))
+    // println(part1(moons))
     println(part2(moons))
   }
 
@@ -19,39 +22,10 @@ object Day12 {
     Iterator.iterate(moons)(step).drop(1000).next.map(energy).sum
   }
 
-  def part2(moons: List[Moon]): Unit = {
-    val m0 = findSame(0, moons(0), moons)
-    println(m0)
-    val m1 = findSame(1, moons(1), moons)
-    println(m1)
-    val m2 = findSame(2, moons(2), moons)
-    println(m2)
-    val m3 = findSame(3, moons(3), moons)
-    println(m3)
-    // moons
-    //   .zipWithIndex
-    //   .map { case (moon, idx) => findSame(idx, moon, moons) }
-    //   .foreach(println)
-  }
-
-  def findSame(idx: Int, moon: Moon, moons: List[Moon]): (List[Moon], Int) = {
-    var found = false
-    var count = 1
-    var stepped = step(moons)
-    while(!found) {
-      if (stepped(idx) == moon) {
-        found = true
-      } else {
-        stepped = step(stepped)
-        count += 1
-      }
-    }
-
-    (stepped, count)
-    // Iterator
-    //   .iterate(init){ case (moons, c) => (step(moons), c + 1) }
-    //   .dropWhile { case (moons, count) => moons(idx) != moon }
-    //   .next
+  def part2(moons: List[Moon]): Int = {
+    val (x, y, z) = memoStep(moons)
+    println(x, y ,z)
+    lcm(x, lcm(y, z))
   }
 
   def calc(v: Int, o: Int): Int = if (o > v) 1 else if (o == v) 0 else -1
@@ -84,33 +58,45 @@ object Day12 {
     }
   }
 
-  // def stepMoon(moon: Moon, otherMoons: List[Moon]): Moon = {
-  //   val Point(x,y,z) = moon.pos
-  //   val Velocity(vX,vY,vZ) = moon.vel
+  @tailrec
+  def memoStep(
+    moons: List[Moon],
+    memos: (Set[String], Set[String], Set[String]) = (Set.empty, Set.empty, Set.empty),
+    founds: (Option[Int], Option[Int], Option[Int]) = (None, None, None),
+    count: Int = 1
+  ): (Int, Int, Int) = {
+    val stepped = step(moons)
 
-  //   val xChange = otherMoons.map(_.pos.x).map(x => calc(moon.pos.x, x)).sum
-  //   val yChange = otherMoons.map(_.pos.y).map(y => calc(moon.pos.y, y)).sum
-  //   val zChange = otherMoons.map(_.pos.z).map(z => calc(moon.pos.z, z)).sum
+    val xs = stepped.map(_.pos.x).mkString("|")
+    val ys = stepped.map(_.pos.y).mkString("|")
+    val zs = stepped.map(_.pos.z).mkString("|")
 
-  //   val nextVel = Velocity(
-  //     x = moon.vel.x + xChange,
-  //     y = moon.vel.y + yChange,
-  //     z = moon.vel.z + zChange,
-  //   )
-  //   val nextPos = Point(
-  //     x = moon.pos.x + nextVel.x,
-  //     y = moon.pos.y + nextVel.y,
-  //     z = moon.pos.z + nextVel.z,
-  //   )
+    val (mX, mY, mZ) = memos
+    val optX = if (mX(xs)) Some(count) else None
+    val optY = if (mY(ys)) Some(count) else None
+    val optZ = if (mZ(zs)) Some(count) else None
 
-  //   Moon(nextPos, nextVel)
-  // }
+    founds match {
+      case (Some(x), Some(y), Some(z)) => (x, y, z)
+      case (x @ Some(_), None, None) =>
+        memoStep(stepped, (mX, mY + ys, mZ + zs), (x, optY, optZ), count + 1)
+      case (None, y @ Some(_), None) =>
+        memoStep(stepped, (mX + xs, mY, mZ + zs), (optX, y, optZ), count + 1)
+      case (None, None, z @ Some(_)) =>
+        memoStep(stepped, (mX + xs, mY + ys, mZ), (optX, optY, z), count + 1)
+      case (x @ Some(_), y @ Some(_), None) =>
+        memoStep(stepped, (mX, mY, mZ + zs), (x, y, optZ), count + 1)
+      case (x @ Some(_), None, z @ Some(_)) =>
+        memoStep(stepped, (mX, mY + ys, mZ), (x, optY, z), count + 1)
+      case (None, y @ Some(_), z @ Some(_)) =>
+        memoStep(stepped, (mX + xs, mY, mZ), (optX, y, z), count + 1)
+      case (None, None, None) =>
+        memoStep(stepped, (mX + xs, mY + ys, mZ + zs), (optX, optY, optZ), count + 1)
+    }
+
+  }
 
   def parseMoons(): List[Moon] = {
-    // <x=-15, y=1, z=4>
-    // <x=1, y=-10, z=-8>
-    // <x=-5, y=4, z=9>
-    // <x=4, y=6, z=-2>
     List(
       Moon(Point(-15,1,4)),
       Moon(Point(1,-10,-8)),
