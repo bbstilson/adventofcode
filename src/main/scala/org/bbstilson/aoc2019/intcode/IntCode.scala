@@ -61,7 +61,6 @@ object IntCode {
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
       case 3  => {
-        throw new Error(s"Requesting input: ${inputs}")
         val (input #:: newInputs) = inputs
         val nextMemory = writeParam(0, input)
         Some((None, state.copy(index = index + 2, memory = nextMemory, inputs = newInputs)))
