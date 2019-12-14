@@ -13,51 +13,49 @@ object IntCode {
   private def step(state: ProgramState): Option[(Option[Long], ProgramState)] = {
     val ProgramState(index, memory, inputs, relativeBase) = state
     val cmd = getCommand(state)
-    val opcode = getOpcode(cmd)
     val paramModes = getParamModes(cmd)
     val readParam = readParamWithState(state, paramModes) _
     val writeParam = writeParamWithState(state, paramModes) _
 
-    opcode match {
-      case 1  => {
+    getOpcode(cmd) match {
+      case Add => {
         val nextMemory = writeParam(2, readParam(0) + readParam(1))
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
-      case 2  => {
+      case Mult => {
         val nextMemory = writeParam(2, readParam(0) * readParam(1))
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
-      case 3  => {
+      case Input => {
         val (input #:: newInputs) = inputs
         val nextMemory = writeParam(0, input)
         Some((None, state.copy(index = index + 2, memory = nextMemory, inputs = newInputs)))
       }
-      case 4  => {
+      case Output => {
         Some((Some(readParam(0)), state.copy(index = index + 2)))
       }
-      case 5  => {
+      case JumpIfTrue => {
         val nextIndex = if (readParam(0) != 0) readParam(1).toInt else index + 3
         Some((None, state.copy(index = nextIndex)))
       }
-      case 6  => {
+      case JumpIfFalse => {
         val nextIndex = if (readParam(0) == 0) readParam(1).toInt else index + 3
         Some((None, state.copy(index = nextIndex)))
       }
-      case 7  => {
+      case LessThan => {
         val value = if (readParam(0) < readParam(1)) 1 else 0
         val nextMemory = writeParam(2, value)
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
-      case 8  => {
+      case EqualTo => {
         val value = if (readParam(0) == readParam(1)) 1 else 0
         val nextMemory = writeParam(2, value)
         Some((None, state.copy(index = index + 4, memory = nextMemory)))
       }
-      case 9  => {
+      case AdjRel => {
         Some((None, state.copy(index = index + 2, relativeBase = relativeBase + readParam(0).toInt)))
       }
-      case 99 => None
-      case _ => throw new Error(s"hit a weird op code: ${opcode}")
+      case Halt => None
     }
   }
 }
@@ -74,7 +72,21 @@ object IntCodeMethods {
   }
 
   private[intcode] def getCommand(state: ProgramState): Int = state.memory(state.index).toInt
-  private[intcode] def getOpcode(cmd: Int): Int = (cmd % 100).toInt
+  private[intcode] def getOpcode(cmd: Int): OpCode = {
+    (cmd % 100).toInt match {
+      case 1 => Add
+      case 2 => Mult
+      case 3 => Input
+      case 4 => Output
+      case 5 => JumpIfTrue
+      case 6 => JumpIfFalse
+      case 7 => LessThan
+      case 8 => EqualTo
+      case 9 => AdjRel
+      case 99 => Halt
+      case x => throw new Error(s"hit a weird op code: ${x}")
+    }
+  }
   private[intcode] def paramMode(cmd: Long)(param: Int): Int = (cmd / math.pow(10, 2 + param) % 10).toInt
   private[intcode] def getParamModes(cmd: Long): Vector[Int] = Vector(0,1,2).map(paramMode(cmd))
   private[intcode] def readParamWithState(state: ProgramState, paramModes: Vector[Int])(i: Int): Long = {
@@ -108,6 +120,18 @@ object IntCodeDataTypes {
     inputs: LazyList[Long],
     relativeBase: Int = 0
   )
+
+  sealed trait OpCode
+  case object Add extends OpCode
+  case object Mult extends OpCode
+  case object Input extends OpCode
+  case object Output extends OpCode
+  case object JumpIfTrue extends OpCode
+  case object JumpIfFalse extends OpCode
+  case object LessThan extends OpCode
+  case object EqualTo extends OpCode
+  case object AdjRel extends OpCode
+  case object Halt extends OpCode
 }
 
 object IntCodeHelpers {
