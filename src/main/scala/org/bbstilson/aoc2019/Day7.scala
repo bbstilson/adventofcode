@@ -1,11 +1,12 @@
 package org.bbstilson.aoc2019
 
-import org.bbstilson.aoc2019.intcode.IntCode
+import org.bbstilson.aoc2019.intcode._
 
 object Day7 {
 
+  val program = IntCodeHelpers.getProgramFromResource("2019/day7/input.txt")
+
   def main(args: Array[String]): Unit = {
-    val program = IntCode.getProgramFromResource("2019/day7/input.txt")
     println(part1(program))
     println(part2(program))
   }
@@ -22,11 +23,11 @@ object Day7 {
   def part2(program: List[Long]): Long = {
     List(5L,6L,7L,8L,9L)
       .permutations
-      .map { ps => lazyCompute(program, ps) }
+      .map { ps => compute(program, ps) }
       .max
   }
 
-  def lazyCompute(program: List[Long], phases: List[Long]): Long = {
+  def compute(program: List[Long], phases: List[Long]): Long = {
     lazy val a: LazyList[Long] = IntCode(program, phases(0) #:: 0L #:: e)
     lazy val b: LazyList[Long] = IntCode(program, phases(1) #:: a)
     lazy val c: LazyList[Long] = IntCode(program, phases(2) #:: b)
