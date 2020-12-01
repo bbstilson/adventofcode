@@ -1,6 +1,6 @@
 package bbstilson
 
-abstract class Problem[A](dir: String, lineFn: String => A = identity) {
+abstract class Problem[A](dir: String, lineFn: String => A) {
   def run(input: List[A]): Unit
 
   def main(args: Array[String]): Unit = {
