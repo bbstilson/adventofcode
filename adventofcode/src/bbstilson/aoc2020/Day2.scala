@@ -1,5 +1,7 @@
 package bbstilson.aoc2020
 
+import aocd.Problem
+
 case class Rule(min: Int, max: Int, letter: Char, password: String)
 
 object Input {
@@ -12,9 +14,10 @@ object Input {
   }
 }
 
-object Day2 extends bbstilson.Problem("day2", Input.parseLine) {
+object Day2 extends Problem(2020, 2) {
 
-  def run(input: List[Rule]): Unit = {
+  def run(in: List[String]): Unit = {
+    val input = in.map(Input.parseLine)
     println(input.filter(isValidPart1).size)
     println(input.filter(isValidPart2).size)
   }

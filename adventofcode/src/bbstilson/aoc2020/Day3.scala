@@ -1,6 +1,8 @@
 package bbstilson.aoc2020
 
-object Day3 extends bbstilson.Problem("day3", identity) {
+import aocd.Problem
+
+object Day3 extends Problem(2020, 3) {
 
   def run(input: List[String]): Unit = {
     println(part1(input, 3, 1))
