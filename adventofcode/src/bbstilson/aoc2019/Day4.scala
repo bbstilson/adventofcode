@@ -1,6 +1,6 @@
 package bbstilson.aoc2019
 
-import bbstilsonimplicits.ListImplicits._
+import bbstilson.implicits.ListImplicits._
 
 import scala.collection.immutable.WrappedString
 

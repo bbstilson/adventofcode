@@ -9,7 +9,7 @@ object adventofcode extends ScalaModule with TpolecatModule with ScalafmtModule 
   def scalaVersion = "2.13.4"
 
   def ivyDeps = Agg(
-    ivy"io.github.bbstilson::aocd:0.1.0"
+    ivy"io.github.bbstilson::aocd:0.1.2"
   )
 
   def runProblem(y: Int = 2020, d: Int) = T.command {
