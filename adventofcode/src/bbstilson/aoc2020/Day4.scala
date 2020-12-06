@@ -1,11 +1,15 @@
 package bbstilson.aoc2020
 
-import aocd._
+import bbstilson.implicits.ListImplicits._
 
-object Day4 extends Problem(2020, 4) {
+object Day4 extends aocd.Problem(2020, 4) {
 
   def run(input: List[String]): Unit = {
-    val passports = Parse.parseInput(input)
+    val passports = for {
+      group <- input.groupedByNewlines
+      parsed = group.map(Parse.parseLine)
+    } yield parsed.reduce(_ ++ _)
+
     val part1 = passports.filter(hasAllFields)
     val part2 = part1.filter(hasValidData)
 
@@ -29,21 +33,7 @@ object Day4 extends Problem(2020, 4) {
 object Parse {
   val PairRegex = """(.+):(.+)""".r
 
-  def parseInput(input: List[String]): List[Map[String, String]] = {
-    val (passports, carry) = input
-      .map(_.trim())
-      .foldLeft((List.empty[Map[String, String]], Map.empty[String, String])) {
-        case ((data, carry), line) =>
-          line match {
-            case "" => (carry +: data, Map.empty)
-            case _  => (data, carry ++ parseLine(line))
-          }
-      }
-
-    carry +: passports
-  }
-
-  private def parseLine(line: String): Map[String, String] = {
+  def parseLine(line: String): Map[String, String] = {
     line
       .split(" ")
       .map { case PairRegex(k, v) => k -> v }
