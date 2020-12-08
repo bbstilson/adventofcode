@@ -16,7 +16,7 @@ object Day7 extends aocd.Problem(2020, 7) {
         .toMap
     }.toMap
 
-    println(rules.keys.filter(holdsShiny).size)
+    println(rules.keys.count(holdsShiny))
     println(sumBagCount(SHINY))
   }
 
