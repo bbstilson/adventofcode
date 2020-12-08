@@ -1,5 +1,7 @@
 package bbstilson.aoc2020
 
+import scala.annotation.tailrec
+
 object Day8 extends aocd.Problem(2020, 8) {
   val ProgramRegex = raw"(.{3}) ([-+]\d+)".r
 
@@ -22,6 +24,7 @@ object Day8 extends aocd.Problem(2020, 8) {
     .next()
     ._1
 
+  @tailrec
   private def runProgram(index: Int, accumulator: Int, swap: Int, seen: Set[Int])(implicit
     instructions: Vector[(String, Int)]
   ): (Int, Boolean) = {
