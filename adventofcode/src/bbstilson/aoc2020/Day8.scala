@@ -21,8 +21,7 @@ object Day8 extends aocd.Problem(2020, 8) {
     .collect { case ((cmd, _), idx) if cmd == "jmp" || cmd == "nop" => idx }
     .map(swap => runProgram(0, 0, swap, Set.empty))
     .dropWhile { case (_, found) => !found }
-    .toList
-    .head
+    .next()
     ._1
 
   @tailrec
