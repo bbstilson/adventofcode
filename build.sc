@@ -4,6 +4,7 @@ import mill._
 import mill.scalalib._
 import mill.scalalib.scalafmt._
 import io.github.davidgregory084.TpolecatModule
+import java.time.{ LocalDate, ZoneId }
 
 object adventofcode extends ScalaModule with TpolecatModule with ScalafmtModule {
   def scalaVersion = "2.13.4"
@@ -12,7 +13,9 @@ object adventofcode extends ScalaModule with TpolecatModule with ScalafmtModule 
     ivy"io.github.bbstilson::aocd:0.1.2"
   )
 
-  def runProblem(y: Int = 2020, d: Int) = T.command {
+  def today: Int = LocalDate.now(ZoneId.of("US/Eastern")).getDayOfMonth()
+
+  def runProblem(y: Int = 2020, d: Int = today) = T.command {
     runMain(s"bbstilson.aoc$y.Day$d")
   }
 
