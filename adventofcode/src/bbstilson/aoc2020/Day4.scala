@@ -6,7 +6,7 @@ object Day4 extends aocd.Problem(2020, 4) {
 
   def run(input: List[String]): Unit = {
     val passports = for {
-      group <- input.groupedByNewlines
+      group <- input.groupedBy(_ == "")
       parsed = group.map(Parse.parseLine)
     } yield parsed.reduce(_ ++ _)
 

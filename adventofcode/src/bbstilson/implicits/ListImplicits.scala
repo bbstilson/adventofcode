@@ -25,12 +25,12 @@ object ListImplicits {
       * @param input
       * @return
       */
-    def groupedByNewlines: List[List[A]] = {
+    def groupedBy(pred: A => Boolean): List[List[A]] = {
       val (out, carry) = xs
         .foldLeft((List.empty[List[A]], List.empty[A])) { case ((out, carry), line) =>
-          line match {
-            case "" => (carry +: out, List.empty)
-            case _  => (out, line +: carry)
+          pred(line) match {
+            case false => (carry +: out, List.empty)
+            case true  => (out, line +: carry)
           }
         }
 
