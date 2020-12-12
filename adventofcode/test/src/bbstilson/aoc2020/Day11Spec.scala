@@ -3,7 +3,6 @@ package bbstilson.aoc2020
 import utest._
 
 object Day11Spec extends TestSuite {
-  // import Day11._
   import Day11.SegmentedViewable
   import Day11.SegmentedViewable._
 
