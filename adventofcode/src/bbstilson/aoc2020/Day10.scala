@@ -7,11 +7,12 @@ object Day10 extends aocd.Problem(2020, 10) {
   def run(input: List[String]): Unit = {
     val adapters = input.map(_.toInt).sorted
     val fixedAdapters = 0 +: adapters :+ (adapters.last + 3)
-    println(part1(fixedAdapters))
-    println(part2(fixedAdapters))
+    part1(fixedAdapters)
+    part2(fixedAdapters)
+    ()
   }
 
-  def part1(adapters: List[Int]): Int = {
+  def part1(adapters: List[Int]): Int = part1 {
     val (ones, threes) = adapters
       .sliding(2)
       .collect { case List(a, b) => b - a }
@@ -24,7 +25,7 @@ object Day10 extends aocd.Problem(2020, 10) {
     ones * threes
   }
 
-  def part2(adapters: List[Int]): Long = {
+  def part2(adapters: List[Int]): Long = part2 {
     val graph = buildGraph(adapters, Map.empty)
     val cache = collection.mutable.Map.empty[Int, Long]
     def traverseGraph(node: Int): Long = cache.getOrElse(

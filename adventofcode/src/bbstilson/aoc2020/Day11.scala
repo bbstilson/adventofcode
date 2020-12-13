@@ -9,12 +9,10 @@ object Day11 extends aocd.Problem(2020, 11) {
 
   def run(input: List[String]): Unit = {
     val indexed = input.map(_.zipWithIndex.toVector).zipWithIndex.toVector
-    val viewableAngles = mkViewAngles(indexed)
-    println("built viewable angles")
-    val p1 = runSimulation(indexed, adjacentSeatsP1, 4)
-    val p2 = runSimulation(indexed, adjacentSeatsP2(viewableAngles), 5)
-    println(p1)
-    println(p2)
+    val viewableAngles = time("view angles", mkViewAngles(indexed))
+    part1 { runSimulation(indexed, adjacentSeatsP1, 4) }
+    part2 { runSimulation(indexed, adjacentSeatsP2(viewableAngles), 5) }
+    ()
   }
 
   case class SegmentedViewable(

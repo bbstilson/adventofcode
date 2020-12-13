@@ -7,13 +7,12 @@ object Day12 extends aocd.Problem(2020, 12) {
 
   def run(input: List[String]): Unit = {
     val actions = mkActions(input)
-    val p1 = part1(actions)
-    val p2 = part2(actions)
-    println(p1)
-    println(p2)
+    part1(actions)
+    part2(actions)
+    ()
   }
 
-  def part1(actions: Actions): Int = {
+  def part1(actions: Actions): Int = part1 {
     val ship = actions.foldLeft(Ship()) { case (ship, (action, amount)) =>
       action match {
         case Forward     => ship.move(amount = amount)
@@ -29,7 +28,7 @@ object Day12 extends aocd.Problem(2020, 12) {
     Math.abs(x) + Math.abs(y)
   }
 
-  def part2(actions: Actions): Int = {
+  def part2(actions: Actions): Int = part2 {
     val (ship, _) = actions.foldLeft((Ship(), (10, 1))) {
       case ((ship, waypoint), (action, amount)) =>
         action match {
