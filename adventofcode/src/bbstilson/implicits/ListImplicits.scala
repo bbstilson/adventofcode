@@ -29,12 +29,12 @@ object ListImplicits {
       val (out, carry) = xs
         .foldLeft((List.empty[List[A]], List.empty[A])) { case ((out, carry), line) =>
           pred(line) match {
-            case false => (carry +: out, List.empty)
+            case false => (carry.reverse +: out, List.empty)
             case true  => (out, line +: carry)
           }
         }
 
-      carry +: out
+      (carry +: out).reverse
     }
   }
 }
