@@ -34,7 +34,7 @@ object ListImplicits {
           }
         }
 
-      (carry +: out).reverse
+      (carry.reverse +: out).reverse
     }
   }
 }
