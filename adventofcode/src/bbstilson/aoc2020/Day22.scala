@@ -79,7 +79,7 @@ object Day22 extends aocd.Problem(2020, 22) {
     val player1Hash = game.player1.hashCode()
     val player2Hash = game.player2.hashCode()
 
-    if (game.player1Hands.contains(player1Hash) || game.player2Hands.contains(player2Hash)) {
+    if (game.player1Hands.contains(player1Hash) && game.player2Hands.contains(player2Hash)) {
       game.copy(
         player2 = Queue.empty
       )
