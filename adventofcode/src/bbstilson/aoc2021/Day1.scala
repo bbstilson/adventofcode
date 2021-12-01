@@ -9,13 +9,14 @@ object Day1 extends aocd.Problem(2021, 1) {
   }
 
   def part1(xs: List[Int]): Int = part1 {
-    xs.tail.foldLeft((xs.head, 0)) { case ((prev, incs), x) => (x, incs + (if (prev < x) 1 else 0)) }._2
+    xs.sliding(2).foldLeft(0) {
+      case (acc, t) if t.head < t.last => acc + 1
+      case (acc, _) => acc
+    }
   }
 
   def part2(xs: List[Int]): Int = part2 {
     val windows = xs.sliding(3).map(_.sum).toList
-    windows.tail.foldLeft((windows.head, 0)) {
-      case ((prev, incs), window) => (window, incs + (if (prev < window) 1 else 0))
-    }._2
+    part1(windows)
   }
 }
