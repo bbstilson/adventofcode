@@ -9,9 +9,9 @@ object Day1 extends aocd.Problem(2021, 1) {
   }
 
   def part1(xs: List[Int]): Int = part1 {
-    xs.sliding(2).foldLeft(0) {
-      case (acc, t) if t.head < t.last => acc + 1
-      case (acc, _) => acc
+    xs.sliding(2).count {
+      case List(x, y) => x < y
+      case _ => false // silence my strict compiler
     }
   }
 
