@@ -8,9 +8,7 @@ object Day20 extends aocd.Problem(2021, 20) {
     ()
   }
 
-  def part1(xs: List[Int]): Int = part1 {
-  }
+  def part1(xs: List[Int]): Int = part1 { xs.head }
 
-  def part2(xs: List[Int]): Int = part2 {
-  }
+  def part2(xs: List[Int]): Int = part2 { xs.head }
 }

@@ -11,7 +11,7 @@ object Day1 extends aocd.Problem(2021, 1) {
   def part1(xs: List[Int]): Int = part1 {
     xs.sliding(2).count {
       case List(x, y) => x < y
-      case _ => false // silence my strict compiler
+      case _          => false // silence my strict compiler
     }
   }
 

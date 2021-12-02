@@ -8,7 +8,8 @@ object Point {
     /** Computes all neighbors in n-dimensional space that are at most $distance away.
       *
       * @param distance
-      * @return all neighbors
+      * @return
+      *   all neighbors
       */
     def neighbors(distance: Int = 1): Vector[Point] = {
       def _neighbors(_point: Point): Vector[Point] = _point match {

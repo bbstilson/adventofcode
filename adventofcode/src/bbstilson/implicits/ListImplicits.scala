@@ -5,23 +5,8 @@ object ListImplicits {
   implicit class FrequencyMapOps[A](xs: List[A]) {
     def toFrequencyMap: Map[A, Int] = xs.groupMapReduce(identity)(_ => 1)(_ + _)
 
-    /** Groups the input into groups by new lines.
-      *  Ex:
-      *  List(
-      *   "aa",
-      *   "aaaa",
-      *   "",
-      *   "bb",
-      *   "bb",
-      *   "",
-      *   "c"
-      * )
-      * Yields:
-      *  List(
-      *    List("aa", "aaaa"),
-      *    List("bb", "bb"),
-      *    List("c")
-      *  )
+    /** Groups the input into groups by new lines. Ex: List( "aa", "aaaa", "", "bb", "bb", "", "c" )
+      * Yields: List( List("aa", "aaaa"), List("bb", "bb"), List("c") )
       * @param input
       * @return
       */
