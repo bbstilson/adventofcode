@@ -14,14 +14,15 @@ object Day2 extends aocd.Problem(2021, 2) {
   }
 
   def part1(xs: List[(String, Long)]): Long = part1 {
-    val (x, y) = xs.foldLeft((0L, 0L)) { case ((x, y), (direction, amt)) =>
-      direction match {
-        case "up"      => (x, y - amt)
-        case "down"    => (x, y + amt)
-        case "forward" => (x + amt, y)
-      }
+    val (horizontal, depth) = xs.foldLeft((0L, 0L)) {
+      case ((horizontal, depth), (direction, amt)) =>
+        direction match {
+          case "up"      => (horizontal, depth - amt)
+          case "down"    => (horizontal, depth + amt)
+          case "forward" => (horizontal + amt, depth)
+        }
     }
-    x * y
+    horizontal * depth
   }
 
   def part2(xs: List[(String, Long)]): Long = part2 {
