@@ -13,9 +13,11 @@ object adventofcode extends ScalaModule with TpolecatModule with ScalafmtModule 
     ivy"io.github.bbstilson::aocd:0.1.3"
   )
 
-  def today: Int = LocalDate.now(ZoneId.of("US/Eastern")).getDayOfMonth()
+  def today: LocalDate = LocalDate.now(ZoneId.of("US/Eastern"))
+  def thisYear: Int = today.getYear()
+  def thisDay: Int = today.getDayOfMonth()
 
-  def runProblem(y: Int = 2020, d: Int = today) = T.command {
+  def runProblem(y: Int = thisYear, d: Int = thisDay) = T.command {
     runMain(s"bbstilson.aoc$y.Day$d")
   }
 
