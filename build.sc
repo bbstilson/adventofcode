@@ -7,7 +7,7 @@ import io.github.davidgregory084.TpolecatModule
 import java.time.{ LocalDate, ZoneId }
 
 object adventofcode extends ScalaModule with TpolecatModule with ScalafmtModule {
-  def scalaVersion = "2.13.4"
+  def scalaVersion = "2.13.7"
 
   def ivyDeps = Agg(
     ivy"io.github.bbstilson::aocd:0.1.3"
