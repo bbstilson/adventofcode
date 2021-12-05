@@ -31,15 +31,15 @@ object Day5 extends aocd.Problem(2021, 5) {
     )
 
     part1 {
-      straightLinesMap.filter { case (_, n) => n > 1 }.size
+      straightLinesMap.count { case (_, n) => n > 1 }
     }
 
     part2 {
       val diagonalLinesMap = diagonalLines
         .foldLeft(List.empty[(Int, Int)]) {
           case (ps, (x1, y1, x2, y2)) => {
-            val xRange = if (x1 > x2) (x1 to x2 by -1) else (x1 to x2)
-            val yRange = if (y1 > y2) (y1 to y2 by -1) else (y1 to y2)
+            val xRange = (x1 to x2 by (if (x1 > x2) -1 else 1))
+            val yRange = (y1 to y2 by (if (y1 > y2) -1 else 1))
             ps ++ xRange.zip(yRange)
           }
         }
@@ -49,8 +49,7 @@ object Day5 extends aocd.Problem(2021, 5) {
         .foldLeft(Map.empty[(Int, Int), Int]) { case (m, p) =>
           m + (p -> (straightLinesMap.getOrElse(p, 0) + diagonalLinesMap.getOrElse(p, 0)))
         }
-        .filter { case (_, n) => n > 1 }
-        .size
+        .count { case (_, n) => n > 1 }
     }
 
     ()
