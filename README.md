@@ -11,9 +11,10 @@ mill adventofcode.runProblem -y 2018 -d 1
 
 ## Things I Learned
 
-- Voronoi Diagram - ([2018 - Day 6](./src/main/scala/org/bbstilson/aoc2018/Day6Part1.scala))
-- Topological Sort - ([2018 - Day 7](./src/main/scala/org/bbstilson/aoc2018/Day7Part1.scala))
-- Summed Area Table - ([2018 - Day 11](./src/main/scala/org/bbstilson/aoc2018/Day11Part1.scala))
+- Voronoi Diagram - ([2018 - Day 6](./adventofcode/src/bbstilson/aoc2018/Day6Part1.scala))
+- Topological Sort - ([2018 - Day 7](./adventofcode/src/bbstilson/aoc2018/Day7.scala))
+- Summed Area Table - ([2018 - Day 11](./adventofcode/src/bbstilson/aoc2018/Day11Part1.scala))
+- Dijkstra's Algorithm - ([2021 - Day 15](./adventofcode/src/bbstilson/aoc2021/Day15.scala))
 
 ### Scala
 
