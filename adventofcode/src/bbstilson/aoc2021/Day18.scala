@@ -1,22 +1,38 @@
 package bbstilson.aoc2021
 
 import java.util.concurrent.atomic.AtomicInteger
+import scala.annotation.tailrec
 
 object Day18 extends aocd.Problem(2021, 18) {
 
-  sealed trait Number {
+  sealed trait Token {
     val id: Int
     def magnitude: Long
+    def show: String
   }
-  case class Pair(id: Int, l: Number, r: Number) extends Number {
+  case class PairToken(id: Int, l: Token, r: Token) extends Token {
+    def show: String = s"[${l.show},${r.show}]"
     def magnitude: Long = l.magnitude * 3 + r.magnitude * 2
   }
-  case class Literal(id: Int, value: Long) extends Number {
+  case class LiteralToken(id: Int, value: Long) extends Token {
+    def show: String = value.toString()
     def magnitude: Long = value
   }
-  case object End extends Number {
+  case object EndToken extends Token {
+    def show: String = ""
+    def magnitude: Long = ???
     val id: Int = -1
-    def magnitude: Long = -1L
+  }
+
+  sealed trait Child { def +(o: Child): Child }
+  case class Pair(left: Int, right: Int) extends Child {
+    def +(o: Child): Child = ???
+  }
+  case class Value(value: Long) extends Child {
+    def +(other: Child): Child = other match {
+      case Pair(_, _)   => throw new Exception("Cannot add Pairs")
+      case Value(other) => Value(value + other)
+    }
   }
 
   def run(input: List[String]): Unit = {
@@ -25,53 +41,147 @@ object Day18 extends aocd.Problem(2021, 18) {
     ()
   }
 
-  def parseNumber(raw: Iterator[Char]): Number = {
+  @tailrec
+  def reduce(token: Token): Token = {
+    val stepped = step(token)
+    if (stepped == token) token else reduce(stepped)
+  }
+
+  def step(token: Token): Token = {
+    val exploded = explode(token)
+    val splitted = split(token)
+
+    val nextToken = if (exploded != token) {
+      exploded
+    } else if (splitted != token) {
+      splitted
+    } else {
+      token
+    }
+
+    fixIds(nextToken)
+  }
+
+  def fixIds(token: Token): Token = {
     val id = new AtomicInteger()
-    def parse(raw: Iterator[Char]): Number =
-      if (raw.isEmpty) End
+    def helper(t: Token): Token = t match {
+      case PairToken(_, l, r)     => PairToken(id.getAndIncrement(), helper(l), helper(r))
+      case LiteralToken(_, value) => LiteralToken(id.getAndIncrement(), value)
+      case EndToken               => EndToken
+    }
+
+    helper(token)
+  }
+
+  def explode(token: Token): Token = {
+    val map = tokenToMap(token)
+    val optPairToExplode = findFirstPairIdToExplode(token)
+    val pairIds = optPairToExplode
+      .map(map)
+      .collect { case Pair(l, r) => Some(List(l, r)) }
+      .getOrElse(None)
+
+    pairIds match {
+      case None => token
+      case Some(ps) => {
+        val literals = getInOrderLiterals(token).filterNot(ps.contains)
+        val leftMost = literals.takeWhile(_ < ps.head).lastOption
+        val rightMost = literals.dropWhile(_ < ps.last).headOption
+        val map1 = leftMost.foldLeft(map) { case (map, id) =>
+          map + (id -> (map(id) + map(ps.head)))
+        }
+        val map2 = rightMost.foldLeft(map1) { case (map, id) =>
+          map + (id -> (map(id) + map(ps.last)))
+        }
+        val map3 = optPairToExplode.foldLeft(map2) { case (map, id) =>
+          map + (id -> Value(0))
+        }
+        mapToToken(map3)
+      }
+    }
+  }
+
+  def split(token: Token): Token = {
+    val map = tokenToMap(token)
+    val maxId = map.keySet.max
+    val map1 = findFirstLiteralToSplit(token) match {
+      case Some(id) => {
+        val value = map(id) match {
+          case Pair(_, _)   => throw new Exception("Cannot split a pair")
+          case Value(value) => value.toDouble
+        }
+
+        val left = maxId + 1
+        val right = maxId + 2
+
+        map ++ Map(
+          id -> Pair(left, right),
+          left -> Value(Math.floor(value / 2).toLong),
+          right -> Value(Math.ceil(value / 2).toLong)
+        )
+      }
+      case None => map
+    }
+
+    mapToToken(map1)
+  }
+
+  def parse(raw: Iterator[Char]): Token = {
+    val id = new AtomicInteger()
+    def helper(raw: Iterator[Char]): Token =
+      if (raw.isEmpty) EndToken
       else {
         raw.next() match {
-          case tok if tok == '[' => Pair(id.getAndIncrement(), parse(raw), parse(raw))
-          case tok if tok == ']' => parse(raw)
-          case tok if tok == ',' => parse(raw)
-          case value             => Literal(id.getAndIncrement(), value.toString().toLong)
+          case tok if tok == '[' => PairToken(id.getAndIncrement(), helper(raw), helper(raw))
+          case tok if tok == ']' => helper(raw)
+          case tok if tok == ',' => helper(raw)
+          case value             => LiteralToken(id.getAndIncrement(), value.toString().toLong)
         }
       }
 
-    parse(raw)
+    helper(raw)
   }
 
-  // def reduce(number: Number): Number = explode.andThen(split)(number)
+  def getInOrderLiterals(token: Token): List[Int] = {
+    def traverse(node: Token, carry: List[Int]): List[Int] = {
+      node match {
+        case PairToken(_, l, r)  => traverse(l, carry) ++ traverse(r, carry)
+        case LiteralToken(id, _) => id +: carry
+        case EndToken            => Nil
+      }
+    }
 
-  // If any pair is nested inside four pairs, the leftmost such pair explodes.
-  // The pair's left value is added to the first regular number to the left
-  // of the exploding pair (if any).
-  // The pair's right value is added to the first regular number to the
-  // right of the exploding pair (if any).
-  // Exploding pairs will always consist of two regular numbers.
-  // Then, the entire exploding pair is replaced with the regular number 0.
+    traverse(token, Nil)
+  }
 
-  // helper(number, ExplodeState()).explodable.getOrElse(number)
-  // if pair
-  //   inspect left
-  //     if literal, save value as left most
-  //     if pair, continue left
-  //   inspect right
-  //     if literal, save value as right most
-  //     if pair, continue right
-  // }
+  def tokenToMap(token: Token): Map[Int, Child] = token match {
+    case PairToken(id, l, r)     => Map(id -> Pair(l.id, r.id)) ++ tokenToMap(l) ++ tokenToMap(r)
+    case LiteralToken(id, value) => Map(id -> Value(value))
+    case EndToken                => Map.empty
+  }
 
-  sealed trait Direction
-  case object L extends Direction
-  case object R extends Direction
+  def mapToToken(map: Map[Int, Child]): Token = {
+    def builder(id: Int): Token = {
+      map.get(id) match {
+        case Some(child) =>
+          child match {
+            case Pair(leftId, rightId) => PairToken(id, builder(leftId), builder(rightId))
+            case Value(value)          => LiteralToken(id, value)
+          }
+        case None => EndToken
+      }
+    }
 
-  def findPathToExplosion(number: Number): Option[Pair] = {
-    def search(number: Number, depth: Int): Option[Pair] = {
+    builder(0)
+  }
+
+  def findFirstPairIdToExplode(number: Token): Option[Int] = {
+    def search(number: Token, depth: Int): Option[Int] = {
       number match {
-        case pair @ Pair(_, l, r) =>
+        case pair @ PairToken(_, l, r) =>
           (l, r) match {
-            case (Literal(_, _), Literal(_, _)) if depth == 4 => Some(pair)
-            case _ if depth >= 4                              => None
+            case (LiteralToken(_, _), LiteralToken(_, _)) if depth == 4 => Some(pair.id)
+            case _ if depth >= 4                                        => None
             case _ => {
               search(l, depth + 1) match {
                 case None => search(r, depth + 1)
@@ -86,10 +196,16 @@ object Day18 extends aocd.Problem(2021, 18) {
     search(number, 0)
   }
 
-  // def getLeftLiterals(number: Number): List[Literal] = Nil
-
-  // left most == pre-order
-  // pair == in-order
-  // right most == post-order
+  def findFirstLiteralToSplit(number: Token): Option[Int] = {
+    number match {
+      case PairToken(_, l, r) =>
+        findFirstLiteralToSplit(l) match {
+          case None    => findFirstLiteralToSplit(r)
+          case literal => literal
+        }
+      case LiteralToken(id, value) if value >= 10 => Some(id)
+      case _                                      => None
+    }
+  }
 
 }
