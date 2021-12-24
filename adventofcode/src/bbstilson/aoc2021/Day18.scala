@@ -39,13 +39,20 @@ object Day18 extends aocd.Problem(2021, 18) {
     val tokens = input.map(parse)
 
     part1 {
-
-      val summed = tokens.tail.foldLeft(tokens.head) { case (t1, t2) =>
-        reduce(add(t1, t2))
-      }
-      summed.magnitude
+      tokens.tail
+        .foldLeft(tokens.head) { case (t1, t2) =>
+          reduce(add(t1, t2))
+        }
+        .magnitude
     }
-    // input.take(3).foreach(println)
+
+    part2 {
+      val magnitudes = for {
+        t1 <- tokens
+        t2 <- tokens
+      } yield reduce(add(t1, t2)).magnitude
+      magnitudes.max
+    }
 
     ()
   }
