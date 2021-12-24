@@ -16,7 +16,7 @@ object Day18Spec extends TestSuite {
         "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]" -> "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
       ).foreach {
         case (input, expected) => {
-          val parsed = parse(input.iterator)
+          val parsed = parse(input)
           explode(parsed).show ==> expected
         }
       }
@@ -41,13 +41,13 @@ object Day18Spec extends TestSuite {
         "[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]" -> "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
         // "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]" -> "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
       ).foreach { case (input, output) =>
-        reduce(parse(input.iterator)).show ==> output
+        reduce(parse(input)).show ==> output
       }
     }
 
     test("example 1") {
       // after addition
-      val start = parse("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]".iterator)
+      val start = parse("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]")
       // after explode
       val s1 = step(start)
       s1.show ==> "[[[[0,7],4],[7,[[8,4],9]]],[1,1]]"
@@ -73,8 +73,8 @@ object Day18Spec extends TestSuite {
         "[[[[3,0],[5,3]],[4,4]],[5,5]]" -> 791L,
         "[[[[5,0],[7,4]],[5,5]],[6,6]]" -> 1137L,
         "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]" -> 3488L
-      ).foreach { case (raw, mag) =>
-        parse(raw.iterator).magnitude ==> mag
+      ).foreach { case (input, mag) =>
+        parse(input).magnitude ==> mag
       }
     }
   }

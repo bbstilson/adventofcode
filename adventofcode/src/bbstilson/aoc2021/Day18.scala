@@ -36,10 +36,21 @@ object Day18 extends aocd.Problem(2021, 18) {
   }
 
   def run(input: List[String]): Unit = {
-    input.take(3).foreach(println)
+    val tokens = input.map(parse)
+
+    part1 {
+
+      val summed = tokens.tail.foldLeft(tokens.head) { case (t1, t2) =>
+        reduce(add(t1, t2))
+      }
+      summed.magnitude
+    }
+    // input.take(3).foreach(println)
 
     ()
   }
+
+  def add(t1: Token, t2: Token): Token = fixIds(PairToken(9999, t1, t2))
 
   @tailrec
   def reduce(token: Token): Token = {
@@ -103,21 +114,16 @@ object Day18 extends aocd.Problem(2021, 18) {
 
   def split(token: Token): Token = {
     val map = tokenToMap(token)
-    val maxId = map.keySet.max
     val map1 = findFirstLiteralToSplit(token) match {
       case Some(id) => {
         val value = map(id) match {
           case Pair(_, _)   => throw new Exception("Cannot split a pair")
           case Value(value) => value.toDouble
         }
-
-        val left = maxId + 1
-        val right = maxId + 2
-
         map ++ Map(
-          id -> Pair(left, right),
-          left -> Value(Math.floor(value / 2).toLong),
-          right -> Value(Math.ceil(value / 2).toLong)
+          id -> Pair(9999, 99999),
+          9999 -> Value(Math.floor(value / 2).toLong),
+          99999 -> Value(Math.ceil(value / 2).toLong)
         )
       }
       case None => map
@@ -126,7 +132,7 @@ object Day18 extends aocd.Problem(2021, 18) {
     mapToToken(map1)
   }
 
-  def parse(raw: Iterator[Char]): Token = {
+  def parse(raw: String): Token = {
     val id = new AtomicInteger()
     def helper(raw: Iterator[Char]): Token =
       if (raw.isEmpty) EndToken
@@ -139,7 +145,7 @@ object Day18 extends aocd.Problem(2021, 18) {
         }
       }
 
-    helper(raw)
+    helper(raw.iterator)
   }
 
   def getInOrderLiterals(token: Token): List[Int] = {
