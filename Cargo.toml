@@ -1,0 +1,11 @@
+[package]
+name = "adventofcode"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.65"
+reqwest = { version = "0.11", features = ["blocking", "json", "cookies"] }
+home = "0.5.4"
