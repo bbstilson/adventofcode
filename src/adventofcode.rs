@@ -21,7 +21,7 @@ pub trait AdventOfCode {
         }
 
         if !problem_file.exists() {
-            let mut file = File::create(problem_file)?;
+            let mut file = File::create(problem_file.clone())?;
             let input = Api::get_input(year, day)?;
             write!(file, "{}", input)?;
         }
