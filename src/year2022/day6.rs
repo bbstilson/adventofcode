@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fmt::Debug};
+use std::collections::HashSet;
 
 use anyhow::Result;
 
@@ -17,13 +17,13 @@ impl AdventOfCode for Day6 {
         let (part_1, _) = signal
             .windows(4)
             .enumerate()
-            .find(|(idx, sequence)| all_chars_different(sequence))
+            .find(|(_idx, sequence)| all_chars_different(sequence))
             .unwrap();
 
         let (part_2, _) = signal
             .windows(14)
             .enumerate()
-            .find(|(idx, sequence)| all_chars_different(sequence))
+            .find(|(_idx, sequence)| all_chars_different(sequence))
             .unwrap();
 
         println!("{:?}", part_1 + 4);

@@ -1,3 +1,5 @@
+#![allow(clippy::all)]
+
 use anyhow::{Ok, Result};
 
 use adventofcode::AdventOfCode;
@@ -11,7 +13,8 @@ pub mod year2022;
 // use year2022::day3::Day3;
 // use year2022::day4::Day4;
 // use year2022::day5::Day5;
-use year2022::day6::Day6;
+// use year2022::day6::Day6;
+use year2022::day7::Day7;
 
 fn main() -> Result<()> {
     // Day1::solve()?;
@@ -19,7 +22,8 @@ fn main() -> Result<()> {
     // Day3::solve()?;
     // Day4::solve()?;
     // Day5::solve()?;
-    Day6::solve()?;
+    // Day6::solve()?;
+    Day7::solve()?;
 
     Ok(())
 }
