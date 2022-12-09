@@ -15,7 +15,8 @@ pub mod year2022;
 // use year2022::day5::Day5;
 // use year2022::day6::Day6;
 // use year2022::day7::Day7;
-use year2022::day8::Day8;
+// use year2022::day8::Day8;
+use year2022::day9::Day9;
 
 fn main() -> Result<()> {
     // Day1::solve()?;
@@ -25,7 +26,8 @@ fn main() -> Result<()> {
     // Day5::solve()?;
     // Day6::solve()?;
     // Day7::solve()?;
-    Day8::solve()?;
+    // Day8::solve()?;
+    Day9::solve()?;
 
     Ok(())
 }
