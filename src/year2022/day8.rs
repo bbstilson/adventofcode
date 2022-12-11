@@ -6,11 +6,200 @@ use crate::adventofcode::AdventOfCode;
 
 pub struct Day8;
 
-type Board = Vec<Vec<((usize, usize), u32)>>;
+type Row = Vec<((usize, usize), u32)>;
+type Coord = (usize, usize);
+type Tree = (Coord, u32);
+
+#[derive(Debug, Clone)]
+struct Board {
+    board: Vec<Row>,
+}
+
+impl Board {
+    pub fn new() -> Board {
+        Board { board: vec![] }
+    }
+
+    pub fn transpose(self) -> Board {
+        let len = self.board[0].len();
+        let mut iters: Vec<_> = self.board.into_iter().map(|row| row.into_iter()).collect();
+        (0..len)
+            .map(|_| {
+                iters
+                    .iter_mut()
+                    .map(|row| row.next().unwrap())
+                    .collect::<Vec<((usize, usize), u32)>>()
+            })
+            .collect()
+    }
+
+    // Terribly inefficient because we copy the data twice.
+    // This could be done in-place.
+    pub fn rotate(self) -> Board {
+        self.transpose()
+            .board
+            .into_iter()
+            .map(|row| row.into_iter().rev().collect::<Vec<_>>())
+            .collect()
+    }
+
+    // this is really inefficient. each coord should cache how many it can see from
+    // every direction. then the next time it's queried, we can just return that number.
+    pub fn viewable_from(&self, tree: &Tree) -> u32 {
+        self.view_left(tree) * self.view_right(tree) * self.view_up(tree) * self.view_down(tree)
+    }
+
+    fn view_left(&self, tree: &Tree) -> u32 {
+        let ((y, x), height) = tree;
+        self.board
+            .iter()
+            .skip(y - 1)
+            .take(1)
+            .map(|row| {
+                row.iter()
+                    .take(*x)
+                    .rev()
+                    .take_while(|(_, t)| t < height)
+                    .collect::<Vec<_>>()
+                    .len()
+            })
+            .sum::<usize>() as u32
+    }
+
+    fn view_right(&self, tree: &Tree) -> u32 {
+        let ((y, x), height) = tree;
+        self.board
+            .iter()
+            .skip(y - 1)
+            .take(1)
+            .map(|row| {
+                row.iter()
+                    .skip(*x - 1)
+                    .take_while(|(_, t)| t < height)
+                    .collect::<Vec<_>>()
+                    .len()
+            })
+            .sum::<usize>() as u32
+    }
+
+    fn view_up(&self, tree: &Tree) -> u32 {
+        let ((y, x), height) = tree;
+        self.board
+            .iter()
+            .skip(y - 1)
+            .take(1)
+            .map(|row| {
+                row.iter()
+                    .skip(*x - 1)
+                    .take_while(|(_, t)| t < height)
+                    .collect::<Vec<_>>()
+                    .len()
+            })
+            .sum::<usize>() as u32
+    }
+
+    fn view_down(&self, _tree: &Tree) -> u32 {
+        // let ((y, x), height) = tree;
+        todo!()
+    }
+
+    pub fn scan_right_left(&self) -> HashSet<(usize, usize)> {
+        let mut seen: HashSet<(usize, usize)> = HashSet::new();
+        for row in self
+            .board
+            .iter()
+            .skip(1) // skip top
+            .take(self.board.len() - 2)
+        {
+            let toadd = row
+                .iter()
+                .rev()
+                .skip(1) // skip left edge
+                .take(row.len() - 2)
+                .scan(
+                    (row.last().unwrap().1, vec![]),
+                    |(tallest, seen), (coord, tree)| scan_for_tallest(tallest, seen, coord, tree),
+                )
+                .last()
+                .unwrap()
+                .1;
+
+            for t in toadd.iter() {
+                seen.insert(t.to_owned());
+            }
+        }
+
+        seen
+    }
+
+    fn scan_left_right(&self) -> HashSet<(usize, usize)> {
+        let mut seen: HashSet<(usize, usize)> = HashSet::new();
+        for row in self
+            .board
+            .iter()
+            .skip(1) // skip top
+            .take(self.board.len() - 2)
+        {
+            let toadd = row
+                .iter()
+                .skip(1) // skip left edge
+                .take(row.len() - 2)
+                .scan((row[0].1, vec![]), |(tallest, seen), (coord, tree)| {
+                    scan_for_tallest(tallest, seen, coord, tree)
+                })
+                .last()
+                .unwrap()
+                .1;
+
+            for t in toadd.iter() {
+                seen.insert(t.clone());
+            }
+        }
+
+        seen
+    }
+}
+
+fn scan_for_tallest(
+    tallest: &mut u32,
+    seen: &mut Vec<Coord>,
+    coord: &Coord,
+    tree: &u32,
+) -> Option<(u32, Vec<Coord>)> {
+    if tree > tallest {
+        seen.push(coord.clone());
+        *tallest = *tree;
+    }
+    Some((*tree, seen.clone()))
+}
+
+impl FromIterator<Row> for Board {
+    fn from_iter<T: IntoIterator<Item = Row>>(iter: T) -> Self {
+        let mut board = Board::new();
+
+        for i in iter {
+            board.board.push(i);
+        }
+
+        board
+    }
+}
 
 impl AdventOfCode for Day8 {
     fn solve() -> Result<()> {
-        let input = Day8::input_lines(2022, 8)?
+        let _input = Day8::input_lines(2022, 8)?
+            .iter()
+            .enumerate()
+            .map(|(row, line)| {
+                line.split("")
+                    .flat_map(|num| num.parse::<u32>())
+                    .enumerate()
+                    .map(|(col, num)| ((row, col), num))
+                    .collect::<Row>()
+            })
+            .collect::<Board>();
+
+        let input = vec!["30373", "25512", "65332", "33549", "35390"]
             .iter()
             .enumerate()
             .map(|(row, line)| {
@@ -22,18 +211,6 @@ impl AdventOfCode for Day8 {
             })
             .collect::<Board>();
 
-        // let input = vec!["30373", "25512", "65332", "33549", "35390"]
-        //     .iter()
-        //     .enumerate()
-        //     .map(|(row, line)| {
-        //         line.split("")
-        //             .flat_map(|num| num.parse::<u32>())
-        //             .enumerate()
-        //             .map(|(col, num)| ((row, col), num))
-        //             .collect::<Vec<((usize, usize), u32)>>()
-        //     })
-        //     .collect::<Board>();
-
         part_1(&input);
         part_2(&input);
 
@@ -41,25 +218,17 @@ impl AdventOfCode for Day8 {
     }
 }
 
-fn part_1(input: &Board) {
-    let board = input.clone();
-    let width = input.first().unwrap().len();
-    let height = input.len();
+fn part_1(board: &Board) {
+    let width = board.board.first().unwrap().len();
+    let height = board.board.len();
 
-    let left = scan_left_right(&board);
-    let right = scan_right_left(&board);
+    let left = &board.scan_left_right();
+    let right = &board.scan_right_left();
 
-    // for row in &input {
-    //     println!("{:?}", row);
-    // }
-    // println!();
-    let rotated = rotate(board);
-    // for row in &rotated {
-    //     println!("{:?}", row);
-    // }
+    let rotated = board.clone().rotate();
 
-    let top = scan_left_right(&rotated);
-    let bottom = scan_right_left(&rotated);
+    let top = &rotated.scan_left_right();
+    let bottom = &rotated.scan_right_left();
 
     let interior_count = left
         .union(&right)
@@ -74,103 +243,22 @@ fn part_1(input: &Board) {
 
     let exterior_count = (width * 2) + (height * 2) - 4;
 
-    // println!();
-    // println!("left: {:?}", left);
-    // println!("right: {:?}", right);
-    // println!("top: {:?}", top);
-    // println!("bottom: {:?}", bottom);
-    // println!();
-
     println!("interior count: {}", interior_count);
     println!("exterior count: {}", exterior_count);
 
     println!("part 1: {}", exterior_count + interior_count);
 }
 
-fn rotate(v: Board) -> Board {
-    let tranposed = transpose(v);
-    tranposed
-        .into_iter()
-        .map(|row| row.into_iter().rev().collect::<Vec<_>>())
-        .collect()
-}
-
-fn part_2(input: &Board) {}
-
-fn transpose(v: Board) -> Board {
-    assert!(!v.is_empty());
-    let len = v[0].len();
-    let mut iters: Vec<_> = v.into_iter().map(|row| row.into_iter()).collect();
-    (0..len)
-        .map(|x| {
-            iters
-                .iter_mut()
-                .map(|row| row.next().unwrap())
-                .collect::<Vec<((usize, usize), u32)>>()
-        })
-        .collect()
-}
-
-fn scan_left_right(xxs: &Board) -> HashSet<(usize, usize)> {
-    let mut seen: HashSet<(usize, usize)> = HashSet::new();
-    for row in xxs
+fn part_2(board: &Board) {
+    let biggest = board
+        .clone()
+        .board
         .iter()
-        .skip(1) // skip top
-        .take(xxs.len() - 2)
-    {
-        let toadd = row
-            .iter()
-            .skip(1) // skip left edge
-            .take(row.len() - 2)
-            .scan((row[0].1, vec![]), |(tallest, seen), (coord, tree)| {
-                if tree > tallest {
-                    seen.push(coord.clone());
-                    *tallest = *tree;
-                }
-                Some((*tree, seen.clone()))
-            })
-            .last()
-            .unwrap()
-            .1;
+        .flatten()
+        .map(|t| t.clone())
+        .max_by(|a, b| board.viewable_from(a).cmp(&board.viewable_from(b)))
+        .unwrap()
+        .1;
 
-        for t in toadd.iter() {
-            seen.insert(t.clone());
-        }
-    }
-
-    seen
-}
-
-fn scan_right_left(xxs: &Board) -> HashSet<(usize, usize)> {
-    let mut seen: HashSet<(usize, usize)> = HashSet::new();
-    for row in xxs
-        .iter()
-        .skip(1) // skip top
-        .take(xxs.len() - 2)
-    {
-        let toadd = row
-            .iter()
-            .rev()
-            .skip(1) // skip left edge
-            .take(row.len() - 2)
-            .scan(
-                (row.last().unwrap().1, vec![]),
-                |(tallest, seen), (coord, tree)| {
-                    if tree > tallest {
-                        seen.push(coord.clone());
-                        *tallest = *tree;
-                    }
-                    Some((*tree, seen.clone()))
-                },
-            )
-            .last()
-            .unwrap()
-            .1;
-
-        for t in toadd.iter() {
-            seen.insert(t.to_owned());
-        }
-    }
-
-    seen
+    println!("part 2: {}", biggest);
 }

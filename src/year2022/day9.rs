@@ -182,7 +182,7 @@ fn part_2(steps: Vec<(Dir, u32)>) -> usize {
 }
 
 mod test {
-    use super::{Coord, Dir, Rope};
+    // use super::{Coord, Dir, Rope};
 
     #[test]
     fn test_moves() {
