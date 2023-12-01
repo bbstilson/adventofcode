@@ -8,7 +8,7 @@ impl Api {
     pub fn get_input(year: u32, day: u32) -> Result<String> {
         let url = format!("https://adventofcode.com/{year}/day/{day}/input");
 
-        let token = env!("AOC_SESSION_TOKEN");
+        let token = std::env::var("AOC_SESSION_TOKEN")?;
         let cookies = reqwest::cookie::Jar::default();
         cookies.add_cookie_str(
             &format!("session={token}"),
