@@ -7,10 +7,10 @@ pub mod api;
 pub mod y23;
 pub mod year2022;
 
-use y23::d1::Day1;
+use y23::d2::*;
 
 fn main() -> Result<()> {
-    Day1::solve()?;
+    Day2::solve()?;
 
     Ok(())
 }
