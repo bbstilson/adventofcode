@@ -53,15 +53,15 @@ fn parse_card(line: &str) -> Result<Card> {
 
     Ok(Card {
         id: card_id,
-        winning_numbers: winning_numbers
-            .split_whitespace()
-            .filter_map(|n| n.parse::<usize>().ok())
-            .collect(),
-        card_numbers: card_numbers
-            .split_whitespace()
-            .filter_map(|n| n.parse::<usize>().ok())
-            .collect(),
+        winning_numbers: parse_numbers(winning_numbers),
+        card_numbers: parse_numbers(card_numbers),
     })
+}
+
+fn parse_numbers(s: &str) -> HashSet<usize> {
+    s.split_whitespace()
+        .filter_map(|n| n.parse::<usize>().ok())
+        .collect()
 }
 
 fn part_1(cards: &[Card]) -> usize {
