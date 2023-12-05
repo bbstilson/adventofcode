@@ -181,27 +181,28 @@ fn part_2(steps: Vec<(Dir, u32)>) -> usize {
     rope.seen.len()
 }
 
-// mod test {
-//     use super::*;
+#[allow(unused_imports)]
+mod test {
+    use super::{Coord, Dir, Rope};
 
-//     #[test]
-//     fn test_moves() {
-//         let mut rope = Rope::size(2);
+    #[test]
+    fn test_moves() {
+        let mut rope = Rope::size(2);
 
-//         rope.step(Dir::Up);
-//         rope.step(Dir::Right);
-//         rope.step(Dir::Up);
+        rope.step(Dir::Up);
+        rope.step(Dir::Right);
+        rope.step(Dir::Up);
 
-//         assert_eq!(rope.knots[0], Coord { x: 1, y: 2 });
-//         assert_eq!(rope.knots[1], Coord { x: 1, y: 1 });
+        assert_eq!(rope.knots[0], Coord { x: 1, y: 2 });
+        assert_eq!(rope.knots[1], Coord { x: 1, y: 1 });
 
-//         let mut rope = Rope::size(2);
+        let mut rope = Rope::size(2);
 
-//         rope.step(Dir::Up);
-//         rope.step(Dir::Right);
-//         rope.step(Dir::Right);
+        rope.step(Dir::Up);
+        rope.step(Dir::Right);
+        rope.step(Dir::Right);
 
-//         assert_eq!(rope.knots[0], Coord { x: 2, y: 1 });
-//         assert_eq!(rope.knots[1], Coord { x: 1, y: 1 });
-//     }
-// }
+        assert_eq!(rope.knots[0], Coord { x: 2, y: 1 });
+        assert_eq!(rope.knots[1], Coord { x: 1, y: 1 });
+    }
+}

@@ -115,106 +115,107 @@ impl Monkey {
 mod input {
     use super::{Game, Monkey};
 
-    // pub fn real() -> Game {
-    //     let m0 = Monkey::new(
-    //         0,
-    //         vec![84, 66, 62, 69, 88, 91, 91],
-    //         |x| x * 11,
-    //         |x| {
-    //             if x % 2 == 0 {
-    //                 4
-    //             } else {
-    //                 7
-    //             }
-    //         },
-    //     );
-    //     let m1 = Monkey::new(
-    //         1,
-    //         vec![98, 50, 76, 99],
-    //         |x| x * x,
-    //         |x| {
-    //             if x % 7 == 0 {
-    //                 3
-    //             } else {
-    //                 6
-    //             }
-    //         },
-    //     );
-    //     let m2 = Monkey::new(
-    //         2,
-    //         vec![72, 56, 94],
-    //         |x| x + 1,
-    //         |x| {
-    //             if x % 13 == 0 {
-    //                 4
-    //             } else {
-    //                 0
-    //             }
-    //         },
-    //     );
-    //     let m3 = Monkey::new(
-    //         3,
-    //         vec![55, 88, 90, 77, 60, 67],
-    //         |x| x + 2,
-    //         |x| {
-    //             if x % 3 == 0 {
-    //                 6
-    //             } else {
-    //                 5
-    //             }
-    //         },
-    //     );
-    //     let m4 = Monkey::new(
-    //         4,
-    //         vec![69, 72, 63, 60, 72, 52, 63, 78],
-    //         |x| x * 13,
-    //         |x| {
-    //             if x % 19 == 0 {
-    //                 1
-    //             } else {
-    //                 7
-    //             }
-    //         },
-    //     );
-    //     let m5 = Monkey::new(
-    //         5,
-    //         vec![89, 73],
-    //         |x| x + 5,
-    //         |x| {
-    //             if x % 17 == 0 {
-    //                 2
-    //             } else {
-    //                 0
-    //             }
-    //         },
-    //     );
-    //     let m6 = Monkey::new(
-    //         6,
-    //         vec![78, 68, 98, 88, 66],
-    //         |x| x + 6,
-    //         |x| {
-    //             if x % 11 == 0 {
-    //                 2
-    //             } else {
-    //                 5
-    //             }
-    //         },
-    //     );
-    //     let m7 = Monkey::new(
-    //         7,
-    //         vec![70],
-    //         |x| x + 7,
-    //         |x| {
-    //             if x % 5 == 0 {
-    //                 1
-    //             } else {
-    //                 3
-    //             }
-    //         },
-    //     );
+    #[allow(dead_code)]
+    pub fn real() -> Game {
+        let m0 = Monkey::new(
+            0,
+            vec![84, 66, 62, 69, 88, 91, 91],
+            |x| x * 11,
+            |x| {
+                if x % 2 == 0 {
+                    4
+                } else {
+                    7
+                }
+            },
+        );
+        let m1 = Monkey::new(
+            1,
+            vec![98, 50, 76, 99],
+            |x| x * x,
+            |x| {
+                if x % 7 == 0 {
+                    3
+                } else {
+                    6
+                }
+            },
+        );
+        let m2 = Monkey::new(
+            2,
+            vec![72, 56, 94],
+            |x| x + 1,
+            |x| {
+                if x % 13 == 0 {
+                    4
+                } else {
+                    0
+                }
+            },
+        );
+        let m3 = Monkey::new(
+            3,
+            vec![55, 88, 90, 77, 60, 67],
+            |x| x + 2,
+            |x| {
+                if x % 3 == 0 {
+                    6
+                } else {
+                    5
+                }
+            },
+        );
+        let m4 = Monkey::new(
+            4,
+            vec![69, 72, 63, 60, 72, 52, 63, 78],
+            |x| x * 13,
+            |x| {
+                if x % 19 == 0 {
+                    1
+                } else {
+                    7
+                }
+            },
+        );
+        let m5 = Monkey::new(
+            5,
+            vec![89, 73],
+            |x| x + 5,
+            |x| {
+                if x % 17 == 0 {
+                    2
+                } else {
+                    0
+                }
+            },
+        );
+        let m6 = Monkey::new(
+            6,
+            vec![78, 68, 98, 88, 66],
+            |x| x + 6,
+            |x| {
+                if x % 11 == 0 {
+                    2
+                } else {
+                    5
+                }
+            },
+        );
+        let m7 = Monkey::new(
+            7,
+            vec![70],
+            |x| x + 7,
+            |x| {
+                if x % 5 == 0 {
+                    1
+                } else {
+                    3
+                }
+            },
+        );
 
-    //     Game::new(vec![m0, m1, m2, m3, m4, m5, m6, m7])
-    // }
+        Game::new(vec![m0, m1, m2, m3, m4, m5, m6, m7])
+    }
 
     pub fn example() -> Game {
         let m0 = Monkey::new(

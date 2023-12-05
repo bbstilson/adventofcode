@@ -5,7 +5,6 @@ use adventofcode::AdventOfCode;
 pub mod adventofcode;
 pub mod api;
 pub mod y23;
-pub mod year2022;
 
 use y23::d4::*;
 
