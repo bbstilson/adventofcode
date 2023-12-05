@@ -6,7 +6,7 @@ pub mod adventofcode;
 pub mod api;
 pub mod y23;
 
-use y23::d4::*;
+use y23::d5::*;
 
 fn main() -> Result<()> {
     Day::solve()?;
