@@ -10,44 +10,11 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> Result<()> {
         let input = Day::input_raw(2023, 5)?;
-        //         let input = "seeds: 79 14 55 13
-
-        // seed-to-soil map:
-        // 50 98 2
-        // 52 50 48
-
-        // soil-to-fertilizer map:
-        // 0 15 37
-        // 37 52 2
-        // 39 0 15
-
-        // fertilizer-to-water map:
-        // 49 53 8
-        // 0 11 42
-        // 42 0 7
-        // 57 7 4
-
-        // water-to-light map:
-        // 88 18 7
-        // 18 25 70
-
-        // light-to-temperature map:
-        // 45 77 23
-        // 81 45 19
-        // 68 64 13
-
-        // temperature-to-humidity map:
-        // 0 69 1
-        // 1 0 69
-
-        // humidity-to-location map:
-        // 60 56 37
-        // 56 93 4"
-        //             .to_string();
 
         let almanac = parse_almanac(&input)?;
 
         println!("{}", part_1(&almanac));
+        println!("{}", part_2(&almanac));
 
         Ok(())
     }
@@ -67,6 +34,20 @@ fn part_1(almanac: &Almanac) -> isize {
         .unwrap()
 }
 
+fn part_2(almanac: &Almanac) -> isize {
+    almanac
+        .seeds
+        .iter()
+        .flat_map(|r| {
+            (r.start..(r.start + r.end))
+                .collect::<Vec<_>>()
+                .iter()
+                .map(|s| almanac.seed_to_location(*s))
+                .collect::<Vec<_>>()
+        })
+        .min()
+        .unwrap()
+}
 #[derive(Debug)]
 struct Almanac {
     seeds: Vec<Range<isize>>,
