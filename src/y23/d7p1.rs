@@ -10,14 +10,6 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> Result<()> {
         let input = Day::input_lines(2023, 7)?;
-        let input = "32T3K 765
-T55J5 684
-KK677 28
-KTJJT 220
-QQQJA 483"
-            .lines()
-            .map(|l| l.to_owned())
-            .collect::<Vec<_>>();
 
         let hands = input
             .into_iter()
@@ -47,7 +39,6 @@ fn part_1(hands: &[Hand]) -> usize {
             }
         })
         .enumerate()
-        // .inspect(|c| println!("{c:?}"))
         .map(|(rank, hand)| hand.bid * (rank + 1))
         .sum()
 }
@@ -101,31 +92,32 @@ impl HandType {
     fn from_vec(ns: &[usize]) -> Self {
         let map = ns.iter().counts();
 
-        if map.len() == 5 {
-            HandType::HighCard
-        } else if map.len() == 4 {
-            HandType::OnePair
-        } else if map.len() == 1 {
-            HandType::FiveKind
-        } else if map.len() == 2 {
-            // it's either a FourKind or a FullHouse
-            let n = **map.values().collect::<Vec<_>>().first().unwrap();
-            // either this count is 4, 3, 2, or 1. the 4 or 1 makes it a FourKind
-            // and the 3 or 2 makes it a FullHouse
-            match n {
-                4 | 1 => HandType::FourKind,
-                3 | 2 => HandType::FullHouse,
-                _ => panic!("got {n} evaluating map len 2"),
+        match map.len() {
+            1 => HandType::FiveKind,
+            5 => HandType::HighCard,
+            4 => HandType::OnePair,
+            2 => {
+                // it's either a FourKind or a FullHouse
+                let n = **map.values().collect::<Vec<_>>().first().unwrap();
+                // either this count is 4, 3, 2, or 1. the 4 or 1 makes it a FourKind
+                // and the 3 or 2 makes it a FullHouse
+                match n {
+                    4 | 1 => HandType::FourKind,
+                    3 | 2 => HandType::FullHouse,
+                    _ => panic!("got {n} evaluating map len 2"),
+                }
             }
-        } else {
-            // the map has 3 keys. It's either a TwoPair or a ThreeKind.
-            // if we find one count of 1, then we know it's a TwoPair.
-            // otherwise, it's a ThreeKind.
-            match map.keys().filter(|k| map[**k] == 1).count() {
-                1 => HandType::TwoPair,
-                2 => HandType::ThreeKind,
-                n => panic!("got {n} evaluating map len 3"),
+            3 => {
+                // the map has 3 keys. It's either a TwoPair or a ThreeKind.
+                // if we find one count of 1, then we know it's a TwoPair.
+                // otherwise, it's a ThreeKind.
+                match map.keys().filter(|k| map[**k] == 1).count() {
+                    1 => HandType::TwoPair,
+                    2 => HandType::ThreeKind,
+                    n => panic!("got {n} evaluating map size 3"),
+                }
             }
+            n => panic!("got {n} evaluating map"),
         }
     }
 }
