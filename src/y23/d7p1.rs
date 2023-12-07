@@ -10,14 +10,14 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> Result<()> {
         let input = Day::input_lines(2023, 7)?;
-        //         let input = "32T3K 765
-        // T55J5 684
-        // KK677 28
-        // KTJJT 220
-        // QQQJA 483"
-        //             .lines()
-        //             .map(|l| l.to_owned())
-        //             .collect::<Vec<_>>();
+        let input = "32T3K 765
+T55J5 684
+KK677 28
+KTJJT 220
+QQQJA 483"
+            .lines()
+            .map(|l| l.to_owned())
+            .collect::<Vec<_>>();
 
         let hands = input
             .into_iter()
