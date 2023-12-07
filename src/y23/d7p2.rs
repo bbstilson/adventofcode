@@ -98,22 +98,34 @@ impl HandType {
         let (wilds, non_wilds): (Vec<usize>, Vec<usize>) = ns.iter().partition(|k| **k == 1);
         let map = non_wilds.iter().counts();
 
-        if wilds.is_empty() {
-            solve_no_wilds(&map)
-        } else {
-            solve_wilds(&map)
+        match wilds.is_empty() {
+            true => solve_no_wilds(&map),
+            false => solve_wilds(wilds.len(), &map),
         }
     }
 }
 
-fn solve_wilds(map: &HashMap<&usize, usize>) -> HandType {
-    match map.len() {
-        4 => HandType::OnePair,
-        3 => HandType::ThreeKind,
-        2 => HandType::FourKind,
-        1 => HandType::FiveKind,
-        0 => HandType::FiveKind,
-        n => panic!("got {n} solving for wilds"),
+fn solve_wilds(wilds: usize, map: &HashMap<&usize, usize>) -> HandType {
+    // guaranteed at least one wild for this function to be called.
+    match (wilds, map.len()) {
+        (1, 4) => HandType::OnePair,
+        (_, 3) => HandType::ThreeKind,
+        (3, 2) => HandType::FourKind,
+        (2, 2) => HandType::FourKind,
+        (1, 2) => {
+            // it's either a FourKind or a FullHouse
+            let n = **map.values().collect::<Vec<_>>().first().unwrap();
+            // either this count is 3, 2, or 1. the 3 or 1 makes it a FourKind
+            // and the 2 makes it a FullHouse
+            match n {
+                3 | 1 => HandType::FourKind,
+                2 => HandType::FullHouse,
+                _ => panic!("got {n} evaluating map len 2"),
+            }
+        }
+        (_, 1) => HandType::FiveKind,
+        (_, 0) => HandType::FiveKind,
+        n => panic!("got {n:?} solving for wilds"),
     }
 }
 
