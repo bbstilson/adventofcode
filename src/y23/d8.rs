@@ -41,9 +41,11 @@ fn part_2(map: &Map) -> usize {
     // Collect all nodes that end in 'A'.
     // Then, for each start node, figure out how many steps to reach a 'Z'.
     // Finally, find LCM of those steps.
-    let starts = map.map.keys().filter(|k| str_ends_with(k, 'A')).map(|k| *k);
-
-    starts
+    map.map
+        .keys()
+        .filter(|k| str_ends_with(k, 'A'))
+        .map(|k| *k)
+        // start of the algorithm
         .map(|start| part_1(map, start, |s| str_ends_with(s, 'Z')))
         .fold(1, |l, r| l.lcm(&r))
 }
