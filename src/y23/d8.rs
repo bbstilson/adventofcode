@@ -43,15 +43,11 @@ fn part_2(map: &Map) -> usize {
     // Finally, find LCM of those steps.
     map.map
         .keys()
-        .filter(|k| str_ends_with(k, 'A'))
+        .filter(|k| k.ends_with('A'))
         .map(|k| *k)
         // start of the algorithm
-        .map(|start| part_1(map, start, |s| str_ends_with(s, 'Z')))
+        .map(|start| part_1(map, start, |s| s.ends_with('Z')))
         .fold(1, |l, r| l.lcm(&r))
-}
-
-fn str_ends_with(s: &str, c: char) -> bool {
-    s.chars().nth(2).unwrap() == c
 }
 
 #[derive(Debug)]
