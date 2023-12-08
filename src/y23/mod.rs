@@ -6,5 +6,6 @@ pub mod d5;
 pub mod d6;
 pub mod d7p1;
 pub mod d7p2;
+pub mod d8;
 
-pub use d7p2::Day;
+pub use d8::Day;
