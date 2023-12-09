@@ -99,7 +99,7 @@ fn part_2(schematic: &Schematic) -> usize {
 
 fn get_adjacent_numbers<'a>(
     symbol: &'a Symbol,
-    numbers: &'a Vec<Number>,
+    numbers: &'a [Number],
 ) -> impl Iterator<Item = usize> + 'a {
     numbers
         .iter()

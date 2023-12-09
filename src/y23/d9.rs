@@ -1,3 +1,4 @@
+#[allow(clippy::ptr_arg)]
 use anyhow::Result;
 use itertools::Itertools;
 

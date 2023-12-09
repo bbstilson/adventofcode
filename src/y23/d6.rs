@@ -30,7 +30,6 @@ fn part_2() -> usize {
 
 fn ways_to_win(t: (usize, usize)) -> usize {
     (0..t.0)
-        .into_iter()
         .filter(|speed| {
             let time_to_travel = t.0 - speed;
             (speed * time_to_travel) > t.1

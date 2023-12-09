@@ -23,7 +23,7 @@ impl AdventOfCode for Day2 {
     }
 }
 
-fn part_1(games: &Vec<Game>) -> usize {
+fn part_1(games: &[Game]) -> usize {
     // sum game ids that could possibly meet these criteria:
     // 12 red cubes, 13 green cubes, and 14 blue cubes
 
@@ -34,7 +34,7 @@ fn part_1(games: &Vec<Game>) -> usize {
         .sum()
 }
 
-fn all_hands_valid(hands: &Vec<Hand>) -> bool {
+fn all_hands_valid(hands: &[Hand]) -> bool {
     // make sure each hand does not have more than:
     // 12 red cubes, 13 green cubes, and 14 blue cubes
     hands
@@ -42,7 +42,7 @@ fn all_hands_valid(hands: &Vec<Hand>) -> bool {
         .all(|hand| hand.red <= 12 && hand.green <= 13 && hand.blue <= 14)
 }
 
-fn part_2(games: &Vec<Game>) -> usize {
+fn part_2(games: &[Game]) -> usize {
     // Get the SUM of the 'POWER' of the fewest number of cubes of each color that could
     // have been in the bag to make the game possible.
     //

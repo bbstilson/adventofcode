@@ -159,7 +159,7 @@ fn solve_no_wilds(map: &HashMap<&usize, usize>) -> HandType {
 }
 
 fn parse_hand(l: &str) -> Result<Hand> {
-    let (hand, bid) = l.split_once(" ").unwrap();
+    let (hand, bid) = l.split_once(' ').unwrap();
     let hand = hand.chars().map(card_to_value).collect::<Vec<_>>();
     let hand_type = HandType::from_vec(&hand);
 
