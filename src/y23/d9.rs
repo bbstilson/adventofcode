@@ -1,4 +1,3 @@
-#[allow(clippy::ptr_arg)]
 use anyhow::Result;
 use itertools::Itertools;
 
@@ -26,14 +25,17 @@ impl AdventOfCode for Day {
     }
 }
 
+#[allow(clippy::ptr_arg)]
 fn part_1(histories: &Vec<Vec<isize>>) -> isize {
     histories.iter().map(predict_next).sum()
 }
 
+#[allow(clippy::ptr_arg)]
 fn part_2(histories: &Vec<Vec<isize>>) -> isize {
     histories.iter().map(predict_previous).sum()
 }
 
+#[allow(clippy::ptr_arg)]
 fn predict_previous(xs: &Vec<isize>) -> isize {
     if xs.iter().all(|x| *x == 0) {
         0
@@ -42,6 +44,7 @@ fn predict_previous(xs: &Vec<isize>) -> isize {
     }
 }
 
+#[allow(clippy::ptr_arg)]
 fn predict_next(xs: &Vec<isize>) -> isize {
     if xs.iter().all(|x| *x == 0) {
         0

@@ -107,7 +107,7 @@ fn parse_hands(hs: &str) -> Result<Vec<Hand>> {
     for h in hs.split(';') {
         let mut hand = Hand::new();
         for dice_info in h.split(',') {
-            let parts = dice_info.trim().split_whitespace().collect::<Vec<_>>();
+            let parts = dice_info.split_whitespace().collect::<Vec<_>>();
             let count = parts[0].parse::<usize>()?;
             match parse_color(parts[1]) {
                 Color::R => hand.red = count,

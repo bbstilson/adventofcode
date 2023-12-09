@@ -18,6 +18,8 @@ impl AdventOfCode for Day {
         Ok(())
     }
 }
+
+#[allow(clippy::while_let_on_iterator)]
 fn part_1(map: &Map, start: &str, hit_target: fn(&str) -> bool) -> usize {
     let mut instructions = map.instructions.iter().cycle();
 

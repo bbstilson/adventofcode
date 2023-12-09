@@ -50,7 +50,7 @@ fn parse_schematic(lines: Vec<String>) -> Result<Schematic> {
         for cap in SYMBOL_REGEX.captures_iter(&line) {
             let re_match = cap.get(0).unwrap();
             symbols.push(Symbol {
-                c: re_match.as_str().chars().nth(0).unwrap(),
+                c: re_match.as_str().chars().next().unwrap(),
                 pos: (row_idx as isize, re_match.range().start as isize),
             });
         }
