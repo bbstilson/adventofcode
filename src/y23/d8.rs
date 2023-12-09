@@ -44,7 +44,7 @@ fn part_2(map: &Map) -> usize {
     map.map
         .keys()
         .filter(|k| k.ends_with('A'))
-        .map(|k| *k)
+        .cloned()
         // start of the algorithm
         .map(|start| part_1(map, start, |s| s.ends_with('Z')))
         .fold(1, |l, r| l.lcm(&r))
@@ -72,16 +72,16 @@ struct Map<'a> {
     map: HashMap<&'a str, (&'a str, &'a str)>,
 }
 
-fn parse_input<'a>(input: &'a str) -> Map {
+fn parse_input(input: &str) -> Map {
     let (instructions, map) = input.split_once("\n\n").unwrap();
 
     Map {
         instructions: instructions.chars().map(Direction::from).collect(),
-        map: map.trim().split("\n").map(parse_map_line).collect(),
+        map: map.trim().lines().map(parse_map_line).collect(),
     }
 }
 
-fn parse_map_line<'a>(l: &'a str) -> (&'a str, (&'a str, &'a str)) {
+fn parse_map_line(l: &str) -> (&str, (&str, &str)) {
     let (start, choices) = l.split_once(" = ").unwrap();
     let (left, right) = choices[1..choices.len() - 1].split_once(", ").unwrap();
 
