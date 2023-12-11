@@ -2,9 +2,10 @@ use anyhow::{Ok, Result};
 
 use adventofcode::AdventOfCode;
 
-pub mod adventofcode;
-pub mod api;
-pub mod y23;
+mod adventofcode;
+mod api;
+mod data;
+mod y23;
 
 use y23::Day;
 
