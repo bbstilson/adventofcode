@@ -1,9 +1,13 @@
+// TODO: part 2. point in polygon needs edge case handling of a point being on a line
+
 use std::{
     collections::{hash_map::Entry, HashMap, HashSet, VecDeque},
     ops::Add,
 };
 
 use anyhow::Result;
+use itertools::Itertools;
+use num::Integer;
 
 use crate::{
     adventofcode::AdventOfCode,
@@ -26,6 +30,16 @@ impl AdventOfCode for Day {
         // L.L7LFJ|||||FJL7||LJ
         // L7JLJL-JLJLJL--JLJ.L"
         //             .to_string();
+        let input = "...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+..........."
+            .to_string();
 
         let map: Map<Tile> = parse_input(&input);
 
@@ -67,65 +81,28 @@ fn part_2(start: Coord, map: &Map<Tile>) -> usize {
     let loop_map = find_pipe(start, map);
     let loop_pipes = loop_map.keys().cloned().collect::<HashSet<_>>();
 
-    let non_loop_pipes = map
-        .keys()
-        .filter(|c| !loop_pipes.contains(*c))
-        .cloned()
-        .collect::<Vec<_>>();
+    // arrange loop pipes by their column
+    let column_to_pipes = loop_map.keys().cloned().into_group_map_by(|c| c.0);
 
-    cluster(non_loop_pipes)
-        .iter()
-        .filter_map(|cluster| {
-            if is_contained(cluster, &loop_pipes) {
-                Some(cluster.len())
-            } else {
-                None
-            }
-        })
-        .sum()
+    println!("{:?}", column_to_pipes);
+
+    map.keys()
+        .filter(|c| !loop_pipes.contains(*c) && is_inside_polygon(c, &column_to_pipes))
+        .inspect(|c| println!("{c:?}"))
+        .count()
 }
 
-fn is_contained(cluster: &HashSet<Coord>, pipe: &HashSet<Coord>) -> bool {
-    // for every node in the cluster, check that its neighbors are either other
-    // members of the cluster OR members of the pipe.
-    cluster.iter().all(|c| {
-        Direction::all()
-            .map(|d| d.to_coord())
-            .map(|change| *c + change)
-            .iter()
-            .all(|n| pipe.contains(n) || cluster.contains(n))
-    })
-}
-
-fn cluster(dirt: Vec<Coord>) -> Vec<HashSet<Coord>> {
-    let mut clusters = vec![];
-
-    fn helper(xs: Vec<Coord>, clusters: &mut Vec<HashSet<Coord>>) -> Vec<HashSet<Coord>> {
-        // take first element
-        // for each remaining element, if it connects to any elements in the current
-        // cluster, move it to the cluster list. otherwise, move the element to another
-        // list. repeat until no more elements.
-        if let Some((start, remaining)) = xs.split_first() {
-            let mut cluster = HashSet::from([start.clone()]);
-            let mut next = Vec::with_capacity(remaining.len());
-
-            for x in remaining {
-                if x != start && cluster.iter().any(|c| c.is_neighbor(&x)) {
-                    cluster.insert(x.clone());
-                } else {
-                    next.push(x.clone());
-                }
-            }
-
-            clusters.push(cluster);
-
-            helper(next, clusters)
-        } else {
-            clusters.to_vec()
-        }
+fn is_inside_polygon(c: &Coord, column_to_pipes: &HashMap<i64, Vec<Coord>>) -> bool {
+    // scan across the veritcal line the coordinate is apart of.
+    // if the count is odd, it's inside, if it's even, it's outside
+    // tricky edge case is a ray being cast on an edge
+    // https://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm
+    if let Some(cs) = column_to_pipes.get(&c.0) {
+        // let is_line = cs.iter().sorted_by(|a, b| a.1.cmp(b.1))
+        cs.iter().filter(|c1| c1.1 > c.1).count().is_odd()
+    } else {
+        false
     }
-
-    helper(dirt, &mut clusters)
 }
 
 fn find_pipe(start: Coord, map: &Map<Tile>) -> Map<i64> {
@@ -163,9 +140,8 @@ fn pipe_to_possible_directions(c: Coord, map: &Map<Tile>) -> Vec<Direction> {
         Tile::NW => vec![Direction::U, Direction::L],
         Tile::SE => vec![Direction::D, Direction::R],
         Tile::SW => vec![Direction::D, Direction::L],
-        Tile::Start => vec![Direction::U, Direction::L],
-        // Tile::Start => vec![Direction::D, Direction::L],
-        _ => vec![], // Tile::Start => vec![Direction::L, Direction::R],
+        Tile::Start => vec![Direction::D, Direction::R],
+        _ => vec![],
     }
 }
 
@@ -232,8 +208,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_is_contained() {
-        let pipe = HashSet::from([
+    fn test_is_inside_polygon() {
+        let column_to_pipes = vec![
             Coord(0, 0),
             Coord(0, 1),
             Coord(0, 2),
@@ -242,43 +218,10 @@ mod tests {
             Coord(2, 0),
             Coord(2, 1),
             Coord(2, 2),
-        ]);
+        ]
+        .into_iter()
+        .into_group_map_by(|c| c.0);
 
-        let cluster = HashSet::from([Coord(1, 1)]);
-
-        assert!(is_contained(&cluster, &pipe));
-
-        let pipe = HashSet::from([
-            Coord(0, 0),
-            Coord(0, 1),
-            Coord(0, 2),
-            Coord(0, 3),
-            Coord(0, 4),
-            Coord(1, 0),
-            Coord(1, 4),
-            Coord(2, 0),
-            Coord(2, 4),
-            Coord(3, 0),
-            Coord(3, 4),
-            Coord(4, 0),
-            Coord(4, 1),
-            Coord(4, 2),
-            Coord(4, 3),
-            Coord(4, 4),
-        ]);
-
-        let cluster = HashSet::from([
-            Coord(1, 1),
-            Coord(1, 2),
-            Coord(1, 3),
-            Coord(2, 1),
-            Coord(2, 2),
-            Coord(2, 3),
-            Coord(3, 1),
-            Coord(3, 2),
-            Coord(3, 3),
-        ]);
-
-        assert!(is_contained(&cluster, &pipe));
+        assert!(is_inside_polygon(&Coord(1, 1), &column_to_pipes))
     }
 }
