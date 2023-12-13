@@ -2,6 +2,7 @@ pub mod d1;
 pub mod d10;
 pub mod d11;
 pub mod d12;
+pub mod d13;
 pub mod d2;
 pub mod d3;
 pub mod d4;
@@ -12,4 +13,4 @@ pub mod d7p2;
 pub mod d8;
 pub mod d9;
 
-pub use d12::Day;
+pub use d13::Day;
