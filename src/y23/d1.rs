@@ -23,11 +23,11 @@ static STR_TO_NUM: Lazy<HashMap<&str, &str>> = Lazy::new(|| {
     ])
 });
 
-pub struct Day1;
+pub struct Day;
 
-impl AdventOfCode for Day1 {
+impl AdventOfCode for Day {
     fn solve() -> Result<()> {
-        let input = Day1::input_lines(2023, 1)?;
+        let input = Day::input_lines(2023, 1)?;
 
         let mut sum = 0;
         for line in input {
