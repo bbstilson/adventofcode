@@ -18,6 +18,7 @@ impl Direction {
         }
     }
 
+    #[allow(unused)]
     pub fn all() -> [Self; 4] {
         [Direction::U, Direction::D, Direction::L, Direction::R]
     }

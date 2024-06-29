@@ -12,5 +12,3 @@ pub mod d7p1;
 pub mod d7p2;
 pub mod d8;
 pub mod d9;
-
-pub use d13::Day;

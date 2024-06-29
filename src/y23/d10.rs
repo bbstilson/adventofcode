@@ -18,7 +18,7 @@ pub struct Day;
 
 impl AdventOfCode for Day {
     fn solve() -> Result<()> {
-        let input = Day::input_raw(2023, 10)?;
+        let _input = Day::input_raw(2023, 10)?;
         //         let input = "FF7FSF7F7F7F7F7F---7
         // L|LJ||||||||||||F--J
         // FL-7LJLJ||||||LJL-77
