@@ -1,3 +1,4 @@
 pub mod d1;
+pub mod d2;
 
-pub use d1::Day;
+pub use d2::Day;
