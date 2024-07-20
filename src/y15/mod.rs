@@ -3,5 +3,6 @@ pub mod d2;
 pub mod d3;
 pub mod d4;
 pub mod d5;
+pub mod d6;
 
-pub use d5::Day;
+pub use d6::Day;
