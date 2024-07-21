@@ -17,3 +17,4 @@ regex = "1.7.0"
 reqwest = { version = "0.12", features = ["blocking", "json", "cookies"] }
 md-5 = "0.10.6"
 hex = "0.4"
+petgraph = "0.6.5"

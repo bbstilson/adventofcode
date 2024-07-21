@@ -6,7 +6,7 @@ pub struct Day;
 
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
-        // Self::part1()?;
+        Self::part1()?;
         Self::part2()?;
 
         Ok(())
