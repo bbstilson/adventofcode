@@ -26,7 +26,7 @@ impl Day {
     }
 
     fn part2() -> Result<()> {
-        let input = Day::input_lines(2015, 8)?;
+        let _input = Day::input_lines(2015, 8)?;
 
         Ok(())
     }

@@ -13,7 +13,6 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         Self::part1()?;
-        Self::part2()?;
 
         Ok(())
     }
@@ -32,12 +31,6 @@ impl Day {
         }
 
         println!("{shortest_dist}");
-
-        Ok(())
-    }
-
-    fn part2() -> Result<()> {
-        let input = Day::input_lines(2015, 9)?;
 
         Ok(())
     }

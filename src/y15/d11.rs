@@ -15,19 +15,11 @@ impl AdventOfCode for Day {
 
 impl Day {
     fn part1() -> Result<()> {
-        let input = "cqjxjnds";
+        let _input = "cqjxjnds";
         Ok(())
     }
 
     fn part2() -> Result<()> {
         Ok(())
     }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_step() {}
 }
