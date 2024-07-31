@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
+    collections::{HashMap, HashSet},
     u32,
 };
 
@@ -133,11 +133,4 @@ impl AdjacencyList {
 
 fn sum_path_cost(path: Vec<(&String, u32)>) -> u32 {
     path.into_iter().map(|(_, cost)| cost).sum()
-}
-
-#[cfg(test)]
-mod tests {
-
-    #[test]
-    fn test_parse() {}
 }
