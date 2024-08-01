@@ -55,11 +55,3 @@ fn has_red(o: &serde_json::Map<String, serde_json::Value>) -> bool {
         _ => false,
     })
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_step() {}
-}
