@@ -14,6 +14,7 @@ struct Board {
     height: usize,
     width: usize,
     states: Vec<State>,
+    sacred_corners: [usize; 4],
 }
 
 impl Board {
@@ -34,10 +35,21 @@ impl Board {
             }
         }
 
+        let sacred_corners = [
+            0,                    // top-left
+            0 + width - 1,        // top-right
+            height * (width - 1), // bottom-left
+            height * width - 1,   // bottom-right
+        ];
+        for corner in &sacred_corners {
+            states[*corner] = State::On;
+        }
+
         Self {
             height,
             width,
             states,
+            sacred_corners,
         }
     }
 
@@ -48,19 +60,23 @@ impl Board {
             .into_iter()
             .enumerate()
             .map(|(idx, state)| {
-                let neighbors = self.num_neighbors(idx);
+                if self.sacred_corners.contains(&idx) {
+                    State::On
+                } else {
+                    let neighbors = self.num_neighbors(idx);
 
-                // The state a light should have next is based on its current state
-                // (on or off) plus the number of neighbors that are on:
-                // A light which is on stays on when 2 or 3 neighbors are on, and turns
-                // off otherwise.
-                // A light which is off turns on if exactly 3 neighbors are on, and
-                // stays off otherwise.
-                match state {
-                    State::On if neighbors != 2 && neighbors != 3 => State::Off,
-                    State::Off if neighbors == 3 => State::On,
-                    State::On => State::On,
-                    State::Off => State::Off,
+                    // The state a light should have next is based on its current state
+                    // (on or off) plus the number of neighbors that are on:
+                    // A light which is on stays on when 2 or 3 neighbors are on, and turns
+                    // off otherwise.
+                    // A light which is off turns on if exactly 3 neighbors are on, and
+                    // stays off otherwise.
+                    match state {
+                        State::On if neighbors != 2 && neighbors != 3 => State::Off,
+                        State::Off if neighbors == 3 => State::On,
+                        State::On => State::On,
+                        State::Off => State::Off,
+                    }
                 }
             })
             .collect();
@@ -176,7 +192,7 @@ mod tests {
     use super::Board;
 
     #[test]
-    fn test_foo() {
+    fn test_part1() {
         let lines = vec![
             ".#.#.#".to_string(),
             "...##.".to_string(),
