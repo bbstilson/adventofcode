@@ -130,9 +130,3 @@ fn gt(a: Option<u32>, b: Option<u32>) -> bool {
 fn lt(a: Option<u32>, b: Option<u32>) -> bool {
     a.is_none() || a < b
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_step() {}
-}
