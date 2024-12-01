@@ -7,8 +7,9 @@ mod api;
 mod data;
 mod y15;
 mod y23;
+mod y24;
 
-use y15::Day;
+use y24::Day;
 
 fn main() -> Result<()> {
     Day::solve()?;
