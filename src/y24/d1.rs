@@ -6,7 +6,7 @@ pub struct Day;
 
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
-        let (ls, rs) =
+        let (mut ls, mut rs) =
             Day::input_lines(2024, 1)?
                 .into_iter()
                 .fold((vec![], vec![]), |(mut ls, mut rs), l| {
@@ -16,8 +16,6 @@ impl AdventOfCode for Day {
                     (ls, rs)
                 });
 
-        let mut ls = ls;
-        let mut rs = rs;
         ls.sort();
         rs.sort();
 
