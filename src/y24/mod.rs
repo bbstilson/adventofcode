@@ -8,10 +8,10 @@ pub mod d1;
 // pub mod d16;
 // pub mod d17;
 // pub mod d18;
-// pub mod d2;
+pub mod d2;
 // pub mod d23;
 // pub mod d25;
-// pub mod d3;
+pub mod d3;
 // pub mod d4;
 // pub mod d5;
 // pub mod d6;
@@ -19,4 +19,4 @@ pub mod d1;
 // pub mod d8;
 // pub mod d9;
 
-pub use d1::Day;
+pub use d3::Day;
