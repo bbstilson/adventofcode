@@ -12,11 +12,11 @@ pub mod d2;
 // pub mod d23;
 // pub mod d25;
 pub mod d3;
-// pub mod d4;
+pub mod d4;
 // pub mod d5;
 // pub mod d6;
 // pub mod d7;
 // pub mod d8;
 // pub mod d9;
 
-pub use d3::Day;
+pub use d4::Day;
