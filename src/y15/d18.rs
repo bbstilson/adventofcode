@@ -37,7 +37,7 @@ impl Board {
 
         let sacred_corners = [
             0,                    // top-left
-            0 + width - 1,        // top-right
+            width - 1,        // top-right
             height * (width - 1), // bottom-left
             height * width - 1,   // bottom-right
         ];

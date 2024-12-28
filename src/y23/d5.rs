@@ -76,8 +76,7 @@ fn find_mapping(source: isize, maps: &[Map]) -> isize {
     // Any source numbers that aren't mapped correspond to the same destination number.
     maps.iter()
         .find(|m| m.source.contains(&source))
-        .map(|m| m.dest.start + (source - m.source.start))
-        .unwrap_or(source)
+        .map_or(source, |m| m.dest.start + (source - m.source.start))
 }
 
 #[derive(Debug)]

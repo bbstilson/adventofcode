@@ -31,8 +31,8 @@ fn part_1(map: &Map, start: &str, hit_target: fn(&str) -> bool) -> usize {
         }
 
         match *direction {
-            Direction::L => curr = &map.map[curr].0,
-            Direction::R => curr = &map.map[curr].1,
+            Direction::L => curr = map.map[curr].0,
+            Direction::R => curr = map.map[curr].1,
         }
         steps += 1;
     }
@@ -46,7 +46,7 @@ fn part_2(map: &Map) -> usize {
     map.map
         .keys()
         .filter(|k| k.ends_with('A'))
-        .cloned()
+        .copied()
         // start of the algorithm
         .map(|start| part_1(map, start, |s| s.ends_with('Z')))
         .fold(1, |l, r| l.lcm(&r))

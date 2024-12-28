@@ -45,7 +45,7 @@ fn cache_input(year: u32, day: u32) -> Result<PathBuf> {
     if !problem_file.exists() {
         let mut file = File::create(problem_file.clone())?;
         let input = Api::get_input(year, day)?;
-        write!(file, "{}", input)?;
+        write!(file, "{input}")?;
     }
 
     Ok(problem_file)

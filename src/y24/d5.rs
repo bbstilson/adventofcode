@@ -11,7 +11,7 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         let input = Day::input_raw(2024, 5).unwrap();
-        let (rules, updates) = parse_input(input);
+        let (rules, updates) = parse_input(&input);
 
         part1(&rules, &updates);
         part2(&rules, &updates);
@@ -20,10 +20,10 @@ impl AdventOfCode for Day {
     }
 }
 
-fn parse_input(input: String) -> (Rules, Vec<Vec<u32>>) {
+fn parse_input(input: &str) -> (Rules, Vec<Vec<u32>>) {
     let (rules, updates): (Vec<String>, Vec<String>) = input
         .lines()
-        .map(|l| l.to_string())
+        .map(ToString::to_string)
         .partition(|l| l.contains('|'));
 
     let rules = rules
@@ -53,7 +53,7 @@ fn part1(rules: &Rules, updates: &Vec<Vec<u32>>) {
     for update in updates {
         let mut update_valid = true;
         for (page_position, page) in update.iter().enumerate() {
-            if let Some(child) = rules.get(&page) {
+            if let Some(child) = rules.get(page) {
                 // O(n^2)
                 if let Some((child_position, _)) =
                     update.iter().enumerate().find(|(_, x)| child.contains(x))
@@ -82,7 +82,7 @@ fn part2(rules: &Rules, updates: &Vec<Vec<u32>>) {
     for update in updates {
         let mut update_valid = true;
         for (page_position, page) in update.iter().enumerate() {
-            if let Some(child) = rules.get(&page) {
+            if let Some(child) = rules.get(page) {
                 // O(n^2)
                 if let Some((child_position, _)) =
                     update.iter().enumerate().find(|(_, x)| child.contains(x))
@@ -139,8 +139,7 @@ fn test_parts() {
 75,29,13
 75,97,47,61,53
 61,13,29
-97,13,75,29,47"
-        .to_string();
+97,13,75,29,47";
 
     let (rules, updates) = parse_input(test_input);
 

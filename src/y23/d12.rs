@@ -84,13 +84,10 @@ fn solve(springs: &str, segments: &[usize]) -> usize {
                 '.' => {
                     let next_springs = springs[1..].to_owned();
                     let k = (next_springs.clone(), segments.to_vec());
-                    match memo.get(&k) {
-                        Some(n) => *n,
-                        None => {
-                            let ans = helper(&next_springs, segments, memo);
-                            memo.insert(k, ans);
-                            ans
-                        }
+                    if let Some(n) = memo.get(&k) { *n } else {
+                        let ans = helper(&next_springs, segments, memo);
+                        memo.insert(k, ans);
+                        ans
                     }
                 }
                 '?' => {
@@ -111,13 +108,10 @@ fn solve(springs: &str, segments: &[usize]) -> usize {
                                         &springs.chars().skip(segment + 1).collect::<String>();
                                     let next_segments = &segments[1..];
                                     let k = (next_springs.clone(), next_segments.to_vec());
-                                    match memo.get(&k) {
-                                        Some(n) => *n,
-                                        None => {
-                                            let ans = helper(&next_springs, next_segments, memo);
-                                            memo.insert(k, ans);
-                                            ans
-                                        }
+                                    if let Some(n) = memo.get(&k) { *n } else {
+                                        let ans = helper(next_springs, next_segments, memo);
+                                        memo.insert(k, ans);
+                                        ans
                                     }
                                 } else {
                                     0
@@ -192,7 +186,7 @@ mod tests {
         for (springs, segments, expected) in tests {
             let ans = solve(springs, &segments);
 
-            assert_eq!(ans, expected, "failed on ({}, {:?})", springs, segments);
+            assert_eq!(ans, expected, "failed on ({springs}, {segments:?})");
         }
     }
 }

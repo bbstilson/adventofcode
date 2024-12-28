@@ -7,7 +7,7 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         let input = Day::input_raw(2024, 6).unwrap();
-        let mut guard_map = GuardMap::from_input(input);
+        let mut guard_map = GuardMap::from_input(&input);
         let ans = guard_map.march();
         println!("{ans}");
         Ok(())
@@ -45,7 +45,7 @@ struct GuardMap {
 }
 
 impl GuardMap {
-    pub fn from_input(input: String) -> Self {
+    pub fn from_input(input: &str) -> Self {
         let input = input
             .lines()
             .map(|l| l.chars().collect::<Vec<_>>())
@@ -55,22 +55,17 @@ impl GuardMap {
         let width = input[0].len();
 
         let mut pos = None;
-        for y in 0..height {
-            for x in 0..width {
-                if input[y][x] == '^' {
-                    pos = Some((x, y))
+        for (y, row) in input.iter().enumerate() {
+            for (x, c) in row.iter().enumerate() {
+                if *c == '^' {
+                    pos = Some((x, y));
                 }
             }
         }
         let pos = pos.unwrap();
         let map: Vec<bool> = input
             .into_iter()
-            .flat_map(|r| {
-                r.into_iter().map(|c| match c {
-                    '#' => true,
-                    _ => false,
-                })
-            })
+            .flat_map(|r| r.into_iter().map(|c| matches!(c, '#')))
             .collect();
 
         Self {
@@ -92,7 +87,7 @@ impl GuardMap {
 
             if hit_wall {
                 // rotate, try again
-                self.dir = self.dir.rotate_90()
+                self.dir = self.dir.rotate_90();
             } else {
                 self.pos = next_pos;
                 self.visited.insert(self.pos);
@@ -149,7 +144,7 @@ impl Debug for GuardMap {
                     write!(f, ".").unwrap();
                 }
             }
-            writeln!(f, "").unwrap();
+            writeln!(f).unwrap();
         }
         writeln!(f, "~~~~")
     }
@@ -166,8 +161,7 @@ fn test_guard_map() {
 .#..^.....
 ........#.
 #.........
-......#..."
-        .to_string();
+......#...";
     let mut gm = GuardMap::from_input(input);
     let ans = gm.march();
     println!("{ans}");

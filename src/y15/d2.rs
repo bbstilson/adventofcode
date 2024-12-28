@@ -57,7 +57,7 @@ impl Day {
         let ans: usize = input
             .into_iter()
             .map(Present::parse)
-            .map(|b| b.area())
+            .map(Present::area)
             .sum();
 
         println!("{ans}");
@@ -69,7 +69,7 @@ impl Day {
         let ans: usize = input
             .into_iter()
             .map(Present::parse)
-            .map(|b| b.ribbon())
+            .map(Present::ribbon)
             .sum();
 
         println!("{ans}");

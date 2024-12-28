@@ -20,7 +20,7 @@ impl Day {
     fn part1() -> Result<()> {
         let input = Day::input_lines(2015, 5)?;
 
-        let num_nice = input.into_iter().filter(|s| nice_word(&s)).count();
+        let num_nice = input.into_iter().filter(|s| nice_word(s)).count();
 
         println!("{num_nice}");
 
@@ -30,7 +30,7 @@ impl Day {
     fn part2() -> Result<()> {
         let input = Day::input_lines(2015, 5)?;
 
-        let num_nice = input.into_iter().filter(|s| nice_word_2(&s)).count();
+        let num_nice = input.into_iter().filter(|s| nice_word_2(s)).count();
 
         println!("{num_nice}");
 
@@ -88,9 +88,8 @@ fn nice_word_2(word: &str) -> bool {
                     println!("found pair: {a}{b}");
                     has_pair = true;
                     break;
-                } else {
-                    prev.insert(a_idx);
                 }
+                prev.insert(a_idx);
             }
             None => {
                 pairs.insert((a, b), HashSet::from_iter(vec![a_idx].into_iter()));

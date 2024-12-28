@@ -65,7 +65,7 @@ fn parse_numbers(s: &str) -> HashSet<usize> {
 }
 
 fn part_1(cards: &[Card]) -> usize {
-    cards.iter().map(|c| c.score()).sum()
+    cards.iter().map(Card::score).sum()
 }
 
 fn part_2(cards: &[Card]) -> usize {
@@ -76,16 +76,13 @@ fn part_2(cards: &[Card]) -> usize {
         cards_by_id: &HashMap<usize, &Card>,
         memo: &mut HashMap<usize, usize>,
     ) -> usize {
-        match memo.get(&card_id) {
-            Some(winnings) => *winnings,
-            None => {
-                let winnings = (1..=cards_by_id[&card_id].matches())
-                    .map(|offset| 1 + helper(card_id + offset, cards_by_id, memo))
-                    .sum();
+        if let Some(winnings) = memo.get(&card_id) { *winnings } else {
+            let winnings = (1..=cards_by_id[&card_id].matches())
+                .map(|offset| 1 + helper(card_id + offset, cards_by_id, memo))
+                .sum();
 
-                memo.insert(card_id, winnings);
-                winnings
-            }
+            memo.insert(card_id, winnings);
+            winnings
         }
     }
 
@@ -109,7 +106,7 @@ mod tests {
         Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
         Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
             .split('\n')
-            .map(|l| l.to_owned())
+            .map(std::borrow::ToOwned::to_owned)
             .collect::<Vec<String>>();
 
         let cards = input

@@ -15,13 +15,13 @@ impl AdventOfCode for Day {
         let mut part1 = cs.clone();
         part1.defrag();
         let checksum = part1.checksum();
-        println!("{}", checksum);
-        assert_eq!(checksum, 6415184586041);
+        println!("{checksum}");
+        assert_eq!(checksum, 6_415_184_586_041);
 
         cs.defrag2();
         let checksum = cs.checksum();
-        println!("{}", checksum);
-        assert_eq!(checksum, 6436819084274);
+        println!("{checksum}");
+        assert_eq!(checksum, 6_436_819_084_274);
 
         Ok(())
     }
@@ -62,11 +62,11 @@ impl CheckSum {
             let (front_id, space) = self.disk[front_idx];
             let (back_id, count) = self.disk[back_idx];
 
-            if let None = back_id {
+            if back_id.is_none() {
                 back_idx -= 1;
                 continue;
             }
-            if let None = front_id {
+            if front_id.is_none() {
                 if space >= count {
                     self.disk[front_idx] = self.disk[back_idx];
                     self.disk[back_idx] = (None, 0);
@@ -90,15 +90,13 @@ impl CheckSum {
             if back_id.is_some() {
                 for front_idx in 0..back_idx {
                     let (front_id, space) = self.disk[front_idx];
-                    if let None = front_id {
-                        if space >= count {
-                            self.disk[front_idx] = self.disk[back_idx];
-                            self.disk[back_idx] = (None, count);
-                            if space > count {
-                                self.disk.insert(front_idx + 1, (None, space - count));
-                            }
-                            break;
+                    if front_id.is_none() && space >= count {
+                        self.disk[front_idx] = self.disk[back_idx];
+                        self.disk[back_idx] = (None, count);
+                        if space > count {
+                            self.disk.insert(front_idx + 1, (None, space - count));
                         }
+                        break;
                     }
                 }
             }
@@ -111,7 +109,7 @@ impl CheckSum {
         for (id, count) in &self.disk {
             if let Some(id) = id {
                 for _ in 0..*count {
-                    sum += *id as u64 * idx as u64;
+                    sum += u64::from(*id) * idx as u64;
                     idx += 1;
                 }
             } else {

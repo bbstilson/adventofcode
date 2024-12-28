@@ -33,13 +33,9 @@ fn is_safe(xs: &[i32]) -> bool {
         return false;
     }
 
-    while let Some(abs) = ins.next() {
+    for abs in ins {
         let a = abs[0];
         let b = abs[1];
-        let diff = (a - b).abs();
-        if diff < 1 && diff > 3 {
-            return false;
-        }
         if (is_increasing && b > a) || (!is_increasing && a > b) {
             return false;
         }

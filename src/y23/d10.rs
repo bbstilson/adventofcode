@@ -79,12 +79,12 @@ fn part_1(start: Coord, map: &Map<Tile>) -> i64 {
 
 fn part_2(start: Coord, map: &Map<Tile>) -> usize {
     let loop_map = find_pipe(start, map);
-    let loop_pipes = loop_map.keys().cloned().collect::<HashSet<_>>();
+    let loop_pipes = loop_map.keys().copied().collect::<HashSet<_>>();
 
     // arrange loop pipes by their column
-    let column_to_pipes = loop_map.keys().cloned().into_group_map_by(|c| c.0);
+    let column_to_pipes = loop_map.keys().copied().into_group_map_by(|c| c.0);
 
-    println!("{:?}", column_to_pipes);
+    println!("{column_to_pipes:?}");
 
     map.keys()
         .filter(|c| !loop_pipes.contains(*c) && is_inside_polygon(c, &column_to_pipes))
@@ -222,6 +222,6 @@ mod tests {
         .into_iter()
         .into_group_map_by(|c| c.0);
 
-        assert!(is_inside_polygon(&Coord(1, 1), &column_to_pipes))
+        assert!(is_inside_polygon(&Coord(1, 1), &column_to_pipes));
     }
 }

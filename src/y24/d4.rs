@@ -5,7 +5,7 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         let input = Day::input_raw(2024, 4).unwrap();
-        let ws = Wordsearch::new(input.clone());
+        let ws = Wordsearch::new(&input);
         let a = ws.search("XMAS");
         println!("{}", a.len());
 
@@ -89,7 +89,7 @@ fn part2(ws: &Wordsearch) {
         found += vec![a && b, a && d, c && b, c && d]
             .into_iter()
             .filter(|t| *t)
-            .count()
+            .count();
     }
 
     println!("{found}");
@@ -118,10 +118,10 @@ const DIRS: [Dir; 8] = [
     Dir::UpLeft,
 ];
 
-fn parse_input(input: String) -> Vec<Vec<char>> {
+fn parse_input(input: &str) -> Vec<Vec<char>> {
     input
         .split('\n')
-        .map(|row| row.trim())
+        .map(str::trim)
         .filter(|row| !row.is_empty())
         .map(|row| row.chars().collect::<Vec<char>>())
         .collect()
@@ -134,7 +134,7 @@ struct Wordsearch {
 }
 
 impl Wordsearch {
-    pub fn new(input: String) -> Self {
+    pub fn new(input: &str) -> Self {
         let board = parse_input(input);
         let height = board.len();
         let width = board[0].len();
@@ -195,7 +195,7 @@ struct Search<'a> {
     ws: &'a Wordsearch,
 }
 
-impl<'a> Search<'a> {
+impl Search<'_> {
     pub fn search(&self, x: usize, y: usize, word: &[char]) -> Vec<((usize, usize), Dir)> {
         if word.is_empty() {
             vec![(self.start, self.dir)]
@@ -223,7 +223,7 @@ SMSMSASXSS
 SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX";
-    let ws = Wordsearch::new(test_input.into());
+    let ws = Wordsearch::new(test_input);
     assert_eq!(ws.search("XMAS").len(), 18);
 
     part2(&ws);

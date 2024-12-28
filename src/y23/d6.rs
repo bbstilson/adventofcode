@@ -22,8 +22,8 @@ fn part_1() -> usize {
 }
 
 fn part_2() -> usize {
-    let time = 40817772;
-    let dist = 219101213651089;
+    let time = 40_817_772;
+    let dist = 219_101_213_651_089;
 
     ways_to_win((time, dist))
 }

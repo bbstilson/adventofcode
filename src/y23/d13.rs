@@ -73,7 +73,7 @@ fn parse_pattern(input: &str) -> Pattern {
     }
 
     Pattern {
-        rows: input.lines().map(|l| l.to_string()).collect(),
+        rows: input.lines().map(std::string::ToString::to_string).collect(),
         cols,
     }
 }
@@ -124,7 +124,7 @@ mod tests {
         ];
 
         for (idx, (xs, expected)) in tests.into_iter().enumerate() {
-            assert_eq!(find_reflection(&xs), expected, "Failed on test {}", idx + 1)
+            assert_eq!(find_reflection(&xs), expected, "Failed on test {}", idx + 1);
         }
     }
 }

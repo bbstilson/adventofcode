@@ -22,7 +22,7 @@ fn part_1(map: &StarMap) -> i64 {
     map.stars
         .iter()
         .combinations(2)
-        .map(|pair| get_distance(pair, &map))
+        .map(|pair| get_distance(pair, map))
         .sum()
 }
 
@@ -40,7 +40,7 @@ fn get_distance(pair: Vec<&Coord>, map: &StarMap) -> i64 {
     let y_gaps = map
         .horizontal_gaps
         .iter()
-        .filter(|c| (p0.0..p1.0).contains(&c))
+        .filter(|c| (p0.0..p1.0).contains(c))
         .count() as i64;
 
     let (p0, p1) = if p0.1 > p1.1 { (p1, p0) } else { (p0, p1) };

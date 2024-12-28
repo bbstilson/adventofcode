@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn ordering() {
-        assert!(HandType::FourKind < HandType::FiveKind)
+        assert!(HandType::FourKind < HandType::FiveKind);
     }
 }
 

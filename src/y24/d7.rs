@@ -5,7 +5,7 @@ pub struct Day;
 impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         let input = Day::input_raw(2024, 7).unwrap();
-        let probs = parse_input(input);
+        let probs = parse_input(&input);
         part1(&probs);
         part2(&probs);
         Ok(())
@@ -39,13 +39,8 @@ fn part2(probs: &[(i64, Vec<i64>)]) {
 }
 
 fn solve1(target: i64, nums: &[i64]) -> u64 {
-    // println!("{target} - {nums:?}");
     if nums.len() == 1 {
-        if target == nums[0] {
-            1
-        } else {
-            0
-        }
+        u64::from(target == nums[0])
     } else if target < 0 {
         0
     } else {
@@ -65,13 +60,8 @@ fn solve1(target: i64, nums: &[i64]) -> u64 {
 }
 
 fn solve2(target: i64, nums: &[i64]) -> u64 {
-    // println!("{target} - {nums:?}");
     if nums.len() == 1 {
-        if target == nums[0] {
-            1
-        } else {
-            0
-        }
+        u64::from(target == nums[0])
     } else if target < 0 {
         0
     } else {
@@ -111,7 +101,7 @@ fn shift(n: i64) -> Option<i64> {
     n.checked_mul(shift)
 }
 
-fn parse_input(input: String) -> Vec<(i64, Vec<i64>)> {
+fn parse_input(input: &str) -> Vec<(i64, Vec<i64>)> {
     input
         .lines()
         .map(|l| {
@@ -137,8 +127,7 @@ fn test_parts() {
 161011: 16 10 13
 192: 17 8 14
 21037: 9 7 18 13
-292: 11 6 16 20"
-        .to_string();
+292: 11 6 16 20";
     let probs = parse_input(input);
     part1(&probs);
     part2(&probs);

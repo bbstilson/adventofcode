@@ -37,7 +37,7 @@ impl Day {
 
         let num_lit: u32 = bulbs.to_vec().into_iter().sum();
 
-        println!("{}", num_lit);
+        println!("{num_lit}");
 
         Ok(())
     }
@@ -76,7 +76,7 @@ impl Day {
         // Santa's instructions?
         let num_lit: u64 = bulbs.to_vec().into_iter().sum();
 
-        println!("{}", num_lit);
+        println!("{num_lit}");
 
         Ok(())
     }

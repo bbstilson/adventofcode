@@ -18,8 +18,7 @@ impl<T: ToString> From<Grid<T>> for String {
                 let n: String = grid
                     .map
                     .get(&Coord(y, x))
-                    .map(|n| n.to_string())
-                    .unwrap_or(".".to_string());
+                    .map_or(".".to_string(), std::string::ToString::to_string);
 
                 s.push_str(&n);
             }

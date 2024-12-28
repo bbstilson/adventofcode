@@ -78,22 +78,19 @@ fn combinate(target: u8, inventory: &mut Inventory) -> u32 {
             return 1;
         }
         let options = inventory.options(remaining);
-        match cache.get(&options) {
-            Some(prev) => *prev,
-            None => {
-                let mut combinations = 0;
-                for option in &options {
-                    inventory.fill(*option);
-                    let next_remaining = remaining - inventory.get_value(*option);
-                    let ans = helper(inventory, next_remaining, cache);
-                    println!("{option} | {remaining} -> {next_remaining} | {ans}");
-                    inventory.unfill(*option);
-                    combinations += ans;
-                }
-                println!("{options:?} -> {remaining} -> {combinations}");
-                cache.insert(options.clone(), combinations / 2);
-                combinations / 2
+        if let Some(prev) = cache.get(&options) { *prev } else {
+            let mut combinations = 0;
+            for option in &options {
+                inventory.fill(*option);
+                let next_remaining = remaining - inventory.get_value(*option);
+                let ans = helper(inventory, next_remaining, cache);
+                println!("{option} | {remaining} -> {next_remaining} | {ans}");
+                inventory.unfill(*option);
+                combinations += ans;
             }
+            println!("{options:?} -> {remaining} -> {combinations}");
+            cache.insert(options.clone(), combinations / 2);
+            combinations / 2
         }
     }
 

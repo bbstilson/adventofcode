@@ -158,7 +158,7 @@ impl Race {
                     Some(new) => *remaining = new,
                     None => *state = State::Moving(DEER[deer].duration),
                 },
-            })
+            });
     }
 }
 

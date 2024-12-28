@@ -82,13 +82,13 @@ mod tests {
         ];
 
         for (ns, expected) in tests {
-            assert_eq!(HandType::from_vec(&ns), expected, "{:?}", ns);
+            assert_eq!(HandType::from_vec(&ns), expected, "{ns:?}");
         }
     }
 
     #[test]
     fn ordering() {
-        assert!(HandType::FourKind < HandType::FiveKind)
+        assert!(HandType::FourKind < HandType::FiveKind);
     }
 }
 

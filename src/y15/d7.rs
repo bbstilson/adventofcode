@@ -105,7 +105,7 @@ impl Day {
 
 fn unwrap_either(registers: &HashMap<String, u16>, e: &Either<String, u16>) -> Option<u16> {
     match e {
-        Either::Left(a) => registers.get(a).map(|a| *a),
+        Either::Left(a) => registers.get(a).copied(),
         Either::Right(a) => Some(*a),
     }
 }
@@ -186,7 +186,7 @@ impl Op {
 
 fn parse_str_or_int(a: &str) -> Either<String, u16> {
     a.parse::<u16>()
-        .map(|a| Either::Right(a))
+        .map(Either::Right)
         .unwrap_or(Either::Left(a.to_string()))
 }
 

@@ -43,10 +43,10 @@ impl AdventOfCode for Day {
                 acc
             });
 
-        Self::part1(&pairs)?;
+        Self::part1(pairs)?;
 
         let mut pairs = pairs
-            .into_iter()
+            .iter_mut()
             .map(|(a, b)| {
                 b.insert("Me".to_string(), 0);
                 (a.to_owned(), b.to_owned())

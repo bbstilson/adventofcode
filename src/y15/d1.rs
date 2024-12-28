@@ -17,7 +17,7 @@ impl Day {
     fn part1() -> Result<()> {
         let input = Day::input_raw(2015, 1)?;
 
-        let ans = input.chars().into_iter().fold(0, |floor, dir| match dir {
+        let ans = input.chars().fold(0, |floor, dir| match dir {
             '(' => floor + 1,
             ')' => floor - 1,
             _ => panic!("bad char: {dir}"),

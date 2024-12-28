@@ -64,7 +64,7 @@ impl Day {
             for b in 0..=(max - a) {
                 for c in 0..=(max - b - a) {
                     for d in 0..=(max - c - b - a) {
-                        best = score_1([a, b, c, d]).max(best)
+                        best = score_1([a, b, c, d]).max(best);
                     }
                 }
             }
@@ -81,7 +81,7 @@ impl Day {
             for b in 0..=(max - a) {
                 for c in 0..=(max - b - a) {
                     for d in 0..=(max - c - b - a) {
-                        best = score_2([a, b, c, d]).max(best)
+                        best = score_2([a, b, c, d]).max(best);
                     }
                 }
             }
@@ -96,7 +96,7 @@ fn score_1(amounts: [i64; 4]) -> u64 {
     // The total score of a cookie can be found by adding up each of the properties
     // (negative totals become 0) and then multiplying together everything except
     // calories.
-    let (cap, dur, fla, tex) = INGREDIENTS.into_iter().zip(amounts.into_iter()).fold(
+    let (cap, dur, fla, tex) = INGREDIENTS.into_iter().zip(amounts).fold(
         (0, 0, 0, 0),
         |(cap, dur, fla, tex), (ing, amt)| {
             (
@@ -114,7 +114,7 @@ fn score_2(amounts: [i64; 4]) -> u64 {
     // The total score of a cookie can be found by adding up each of the properties
     // (negative totals become 0) and then multiplying together everything except
     // calories.
-    let (cal, cap, dur, fla, tex) = INGREDIENTS.into_iter().zip(amounts.into_iter()).fold(
+    let (cal, cap, dur, fla, tex) = INGREDIENTS.into_iter().zip(amounts).fold(
         (0, 0, 0, 0, 0),
         |(cal, cap, dur, fla, tex), (ing, amt)| {
             (

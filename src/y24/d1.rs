@@ -16,8 +16,8 @@ impl AdventOfCode for Day {
                     (ls, rs)
                 });
 
-        ls.sort();
-        rs.sort();
+        ls.sort_unstable();
+        rs.sort_unstable();
 
         let part1 = ls
             .iter()

@@ -68,7 +68,7 @@ impl AdjacencyList {
                 .or_insert(HashMap::from([(a, dist)]));
         }
 
-        Self { map, locations }
+        Self { locations, map }
     }
 
     fn traverse(&self, start: &String) -> Option<u32> {
@@ -91,7 +91,7 @@ impl AdjacencyList {
                         .filter(|(neighbor, _)| !visited.contains(neighbor))
                         .collect_vec();
 
-                    if unvisited_neighbors.len() == 0 {
+                    if unvisited_neighbors.is_empty() {
                         match path.len() == adj_list.locations.len() {
                             true => Some(sum_path_cost(path)),
                             false => None,
@@ -116,7 +116,7 @@ impl AdjacencyList {
         }
 
         let visited = HashSet::from([start]);
-        helper(start, 0, vec![], &self, visited)
+        helper(start, 0, vec![], self, visited)
     }
 
     fn starts(&self) -> HashSet<String> {
