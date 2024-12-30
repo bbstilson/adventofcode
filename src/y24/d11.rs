@@ -6,8 +6,8 @@ impl AdventOfCode for Day {
     fn solve() -> anyhow::Result<()> {
         let input = vec![5, 89749, 6061, 43, 867, 1965860, 0, 206250];
 
-        blink(input.clone(), 25);
-        // blink(input.clone(), 75);
+        // blink(input.clone(), 25);
+        blink(input.clone(), 75);
 
         Ok(())
     }
@@ -24,19 +24,6 @@ fn blink(stones: Vec<u64>, n: usize) {
                 (lens, next)
             });
     println!("{first_iters:?}");
-}
-
-fn fib(a: usize, b: usize, n: usize) -> usize {
-    assert!(a < b, "a should be less than b");
-
-    let mut a = a;
-    let mut b = b;
-    for _ in 0..n {
-        let nb = a + b;
-        a = b;
-        b = nb;
-    }
-    b
 }
 
 fn blink_once(stones: Vec<u64>) -> Vec<u64> {
@@ -84,24 +71,4 @@ fn split_num(n: u64) -> (u64, u64) {
 fn test_split_num() {
     assert_eq!(split_num(1234), (12, 34));
     assert_eq!(split_num(123456), (123, 456));
-}
-
-#[test]
-fn test_fib() {
-    blink(vec![125, 17], 6);
-}
-
-#[test]
-fn ahh() {
-    let mut stones = vec![125, 17];
-    let mut prev_len = stones.len();
-    for _ in 0..25 {
-        stones = blink_once(stones);
-        println!(
-            "{:?} - {prev_len} = {}",
-            stones.len(),
-            stones.len() - prev_len
-        );
-        prev_len = stones.len();
-    }
 }
